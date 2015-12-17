@@ -1,7 +1,9 @@
-package com.bromancelabs.geoquiz;
+package com.bromancelabs.geoquiz.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.bromancelabs.geoquiz.R;
 
 public class QuizActivity extends AppCompatActivity {
 
