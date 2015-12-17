@@ -3,8 +3,10 @@ package com.bromancelabs.geoquiz.activities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.bromancelabs.geoquiz.R;
+import com.bromancelabs.geoquiz.models.Question;
 import com.bromancelabs.geoquiz.utils.SnackBarUtils;
 
 import butterknife.Bind;
@@ -15,6 +17,18 @@ public class QuizActivity extends AppCompatActivity {
 
     @Bind(R.id.btn_true) Button mTrueButton;
     @Bind(R.id.btn_false) Button mFalseButton;
+    @Bind(R.id.btn_next) Button mNextButton;
+    @Bind(R.id.tv_question) TextView mQuestionTextView;
+
+    private Question[] mQuestionBank = new Question[] {
+        new Question(R.string.question_oceans, true),
+        new Question(R.string.question_mideast, false),
+        new Question(R.string.question_africa, false),
+        new Question(R.string.question_americas, true),
+        new Question(R.string.question_asia, true)
+    };
+
+    private int mCurrentIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
