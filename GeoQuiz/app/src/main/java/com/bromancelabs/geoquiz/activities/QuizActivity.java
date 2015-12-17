@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 
 import com.bromancelabs.geoquiz.R;
+import com.bromancelabs.geoquiz.utils.SnackBarUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -25,11 +26,11 @@ public class QuizActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_true)
     public void trueButtonClicked() {
-
+        SnackBarUtils.getSnackBar(this, R.string.incorrect_snackbar, R.color.white, R.color.red);
     }
 
     @OnClick(R.id.btn_false)
     public void falseButtonClicked() {
-
+        SnackBarUtils.getSnackBar(this, R.string.correct_snackbar, R.color.white, R.color.green);
     }
 }
