@@ -8,6 +8,7 @@ import com.bromancelabs.geoquiz.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -20,5 +21,15 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
 
         ButterKnife.bind(this);
+    }
+
+    @OnClick(R.id.btn_true)
+    public void trueButtonClicked() {
+
+    }
+
+    @OnClick(R.id.btn_false)
+    public void falseButtonClicked() {
+
     }
 }
