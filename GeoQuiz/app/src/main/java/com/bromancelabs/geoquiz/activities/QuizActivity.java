@@ -38,13 +38,19 @@ public class QuizActivity extends AppCompatActivity {
 
     @OnClick(R.id.tv_question)
     public void questionClicked() {
-        updateQuestionIndex();
+        incrementQuestionIndex();
+        updateQuestion();
+    }
+
+    @OnClick(R.id.btn_previous)
+    public void previousButtonClicked() {
+        deccrementQuestionIndex();
         updateQuestion();
     }
 
     @OnClick(R.id.btn_next)
     public void nextButtonClicked() {
-        updateQuestionIndex();
+        incrementQuestionIndex();
         updateQuestion();
     }
 
@@ -58,7 +64,11 @@ public class QuizActivity extends AppCompatActivity {
         checkAnswer(false);
     }
 
-    private void updateQuestionIndex() {
+    private void deccrementQuestionIndex() {
+        mCurrentIndex = (mCurrentIndex - 1) % mQuestionBank.length;
+    }
+
+    private void incrementQuestionIndex() {
         mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
     }
 
