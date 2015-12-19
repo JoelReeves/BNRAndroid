@@ -41,6 +41,13 @@ public class QuizActivity extends AppCompatActivity {
         mQuestionTextView.setText(question);
     }
 
+    @OnClick(R.id.btn_next)
+    public void nextButtonClicked() {
+        mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+        int question = mQuestionBank[mCurrentIndex].getTextResId();
+        mQuestionTextView.setText(question);
+    }
+
     @OnClick(R.id.btn_true)
     public void trueButtonClicked() {
         SnackBarUtils.getSnackBar(this, R.string.incorrect_snackbar, R.color.white, R.color.red);
