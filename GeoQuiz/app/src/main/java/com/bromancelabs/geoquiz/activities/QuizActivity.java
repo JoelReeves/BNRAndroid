@@ -40,9 +40,15 @@ public class QuizActivity extends AppCompatActivity {
         updateQuestion();
     }
 
+    @OnClick(R.id.tv_question)
+    public void questionClicked() {
+        updateQuestionIndex();
+        updateQuestion();
+    }
+
     @OnClick(R.id.btn_next)
     public void nextButtonClicked() {
-        mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+        updateQuestionIndex();
         updateQuestion();
     }
 
@@ -54,6 +60,10 @@ public class QuizActivity extends AppCompatActivity {
     @OnClick(R.id.btn_false)
     public void falseButtonClicked() {
         checkAnswer(false);
+    }
+
+    private void updateQuestionIndex() {
+        mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
     }
 
     private void updateQuestion() {
