@@ -37,15 +37,13 @@ public class QuizActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        int question = mQuestionBank[mCurrentIndex].getTextResId();
-        mQuestionTextView.setText(question);
+        updateQuestion();
     }
 
     @OnClick(R.id.btn_next)
     public void nextButtonClicked() {
         mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
-        int question = mQuestionBank[mCurrentIndex].getTextResId();
-        mQuestionTextView.setText(question);
+        updateQuestion();
     }
 
     @OnClick(R.id.btn_true)
@@ -56,5 +54,10 @@ public class QuizActivity extends AppCompatActivity {
     @OnClick(R.id.btn_false)
     public void falseButtonClicked() {
         SnackBarUtils.getSnackBar(this, R.string.correct_snackbar, R.color.white, R.color.green);
+    }
+
+    private void updateQuestion() {
+        int question = mQuestionBank[mCurrentIndex].getTextResId();
+        mQuestionTextView.setText(question);
     }
 }
