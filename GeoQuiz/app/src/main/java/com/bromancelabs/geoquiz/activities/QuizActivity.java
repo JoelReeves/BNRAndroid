@@ -44,7 +44,7 @@ public class QuizActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_previous)
     public void previousButtonClicked() {
-        deccrementQuestionIndex();
+        decrementQuestionIndex();
         updateQuestion();
     }
 
@@ -64,7 +64,10 @@ public class QuizActivity extends AppCompatActivity {
         checkAnswer(false);
     }
 
-    private void deccrementQuestionIndex() {
+    private void decrementQuestionIndex() {
+        if (mCurrentIndex == 0) {
+            mCurrentIndex = mQuestionBank.length;
+        }
         mCurrentIndex = (mCurrentIndex - 1) % mQuestionBank.length;
     }
 
