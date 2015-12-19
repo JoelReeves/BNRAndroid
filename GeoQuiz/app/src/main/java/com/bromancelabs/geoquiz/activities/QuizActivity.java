@@ -2,7 +2,6 @@ package com.bromancelabs.geoquiz.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.bromancelabs.geoquiz.R;
@@ -15,9 +14,6 @@ import butterknife.OnClick;
 
 public class QuizActivity extends AppCompatActivity {
 
-    @Bind(R.id.btn_true) Button mTrueButton;
-    @Bind(R.id.btn_false) Button mFalseButton;
-    @Bind(R.id.btn_next) Button mNextButton;
     @Bind(R.id.tv_question) TextView mQuestionTextView;
 
     private Question[] mQuestionBank = new Question[] {
