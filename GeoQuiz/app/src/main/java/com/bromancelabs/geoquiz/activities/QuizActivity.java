@@ -48,16 +48,32 @@ public class QuizActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_true)
     public void trueButtonClicked() {
-        SnackBarUtils.getSnackBar(this, R.string.incorrect_snackbar, R.color.white, R.color.red);
+        checkAnswer(true);
     }
 
     @OnClick(R.id.btn_false)
     public void falseButtonClicked() {
-        SnackBarUtils.getSnackBar(this, R.string.correct_snackbar, R.color.white, R.color.green);
+        checkAnswer(false);
     }
 
     private void updateQuestion() {
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
+    }
+
+    private void checkAnswer(boolean userPressedTrue) {
+        boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
+        int messageResId = 0;
+        int snackBarBackgroundColor = 0;
+
+        if (userPressedTrue == answerIsTrue) {
+            messageResId = R.string.correct_snackbar;
+            snackBarBackgroundColor = R.color.green;
+        } else {
+            messageResId = R.string.incorrect_snackbar;
+            snackBarBackgroundColor = R.color.red;
+        }
+
+        SnackBarUtils.getSnackBar(this, messageResId, R.color.white, snackBarBackgroundColor);
     }
 }
