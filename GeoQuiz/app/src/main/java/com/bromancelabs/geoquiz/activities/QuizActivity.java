@@ -36,6 +36,9 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
 
         ButterKnife.bind(this);
+
+        int question = mQuestionBank[mCurrentIndex].getTextResId();
+        mQuestionTextView.setText(question);
     }
 
     @OnClick(R.id.btn_true)
