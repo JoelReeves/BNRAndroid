@@ -86,7 +86,8 @@ public class QuizActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_cheat)
     public void cheatButtonClicked() {
-        Intent intent = new Intent(this, CheatActivity.class);
+        boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
+        Intent intent = CheatActivity.newIntent(this, answerIsTrue);
         startActivity(intent);
     }
 
