@@ -11,7 +11,7 @@
         android:id="@+id/tv_question"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="24dp"
+        android:padding="@dimen/question_padding"
         tools:text="Sample Question"/>
 
     <LinearLayout
@@ -36,6 +36,6 @@
         android:layout_height="wrap_content"
         android:text="@string/next_button"
         android:drawableRight="@drawable/arrow_right"
-        android:drawablePadding="4dp"/>
+        android:drawablePadding="@dimen/drawable_padding"/>
 
 </LinearLayout>
