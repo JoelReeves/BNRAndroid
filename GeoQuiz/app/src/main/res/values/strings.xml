@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">GeoQuiz</string>
+    <string name="cheat_activity">CheatActivity</string>
 
     <!--Buttons-->
     <string name="true_button">True</string>
