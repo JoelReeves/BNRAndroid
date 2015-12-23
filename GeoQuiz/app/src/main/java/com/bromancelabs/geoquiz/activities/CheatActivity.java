@@ -14,6 +14,7 @@ import butterknife.OnClick;
 
 public class CheatActivity extends AppCompatActivity {
     private static final String EXTRA_ANSWER_IS_TRUE = "com.bromancelabs.geoquiz.activities.answer_is_true";
+    private static final String EXTRA_ANSWER_SHOWN = "com.bromancelabs.geoquiz.activities.answer_shown";
 
     @Bind(R.id.tv_answer) TextView mAnswerTextView;
 
@@ -23,6 +24,10 @@ public class CheatActivity extends AppCompatActivity {
         Intent intent = new Intent(context, CheatActivity.class);
         intent.putExtra(EXTRA_ANSWER_IS_TRUE, answerIsTrue);
         return intent;
+    }
+
+    public static boolean wasAnswerShown(Intent result) {
+        return result.getBooleanExtra(EXTRA_ANSWER_SHOWN, false);
     }
 
     @Override
@@ -38,5 +43,12 @@ public class CheatActivity extends AppCompatActivity {
     @OnClick(R.id.btn_showAnswer)
     public void showAnswerClicked() {
         mAnswerTextView.setText(mAnswerIsTrue ? R.string.true_button : R.string.false_button);
+        setAnswerShownResult(true);
+    }
+
+    private void setAnswerShownResult(boolean isAnswerShown) {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown);
+        setResult(RESULT_OK, intent);
     }
 }

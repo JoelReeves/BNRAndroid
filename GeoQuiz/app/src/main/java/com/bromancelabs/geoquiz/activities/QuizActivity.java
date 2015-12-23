@@ -1,5 +1,7 @@
 package com.bromancelabs.geoquiz.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -16,6 +18,7 @@ import butterknife.OnClick;
 public class QuizActivity extends AppCompatActivity {
     private static final String TAG = QuizActivity.class.getSimpleName();
     private static final String KEY_INDEX = "index";
+    private static final int REQUEST_CODE_CHEAT = 0;
 
     @Bind(R.id.tv_question) TextView mQuestionTextView;
 
@@ -28,6 +31,7 @@ public class QuizActivity extends AppCompatActivity {
     };
 
     private int mCurrentIndex = 0;
+    private boolean mIsCheater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,15 +87,30 @@ public class QuizActivity extends AppCompatActivity {
         outState.putInt(KEY_INDEX, mCurrentIndex);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        if (requestCode == REQUEST_CODE_CHEAT) {
+            if (data == null) {
+                return;
+            }
+            mIsCheater = CheatActivity.wasAnswerShown(data);
+        }
+    }
+
     @OnClick(R.id.btn_cheat)
     public void cheatButtonClicked() {
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
-        startActivity(CheatActivity.newIntent(this, answerIsTrue));
+        startActivityForResult(CheatActivity.newIntent(this, answerIsTrue), REQUEST_CODE_CHEAT);
     }
 
     @OnClick(R.id.btn_next)
     public void nextButtonClicked() {
         mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+        mIsCheater = false;
         updateQuestion();
     }
 
@@ -115,12 +134,17 @@ public class QuizActivity extends AppCompatActivity {
         int messageResId;
         int snackBarBackgroundColor;
 
-        if (userPressedTrue == answerIsTrue) {
-            messageResId = R.string.correct_snackbar;
-            snackBarBackgroundColor = R.color.green;
-        } else {
-            messageResId = R.string.incorrect_snackbar;
+        if (mIsCheater) {
+            messageResId = R.string.judgment_snackbar;
             snackBarBackgroundColor = R.color.red;
+        } else {
+            if (userPressedTrue == answerIsTrue) {
+                messageResId = R.string.correct_snackbar;
+                snackBarBackgroundColor = R.color.green;
+            } else {
+                messageResId = R.string.incorrect_snackbar;
+                snackBarBackgroundColor = R.color.red;
+            }
         }
 
         SnackBarUtils.showSnackBar(this, messageResId, R.color.white, snackBarBackgroundColor);
