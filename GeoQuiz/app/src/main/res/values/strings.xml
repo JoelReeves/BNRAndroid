@@ -23,5 +23,6 @@
     <!--CheatActivity-->
     <string name="warning_text">Are you sure you want to do this?</string>
     <string name="show_answer_button">Show Answer</string>
+    <string name="api_level">"API Level "</string>
 
 </resources>

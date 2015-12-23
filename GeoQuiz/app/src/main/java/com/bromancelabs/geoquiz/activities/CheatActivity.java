@@ -24,6 +24,7 @@ public class CheatActivity extends AppCompatActivity {
 
     @Bind(R.id.tv_answer) TextView mAnswerTextView;
     @Bind(R.id.btn_showAnswer) Button mShowAnswer;
+    @Bind(R.id.tv_apiLevel) TextView apiLevelTextView;
 
     private boolean mAnswerIsTrue;
 
@@ -45,6 +46,8 @@ public class CheatActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mAnswerIsTrue = getIntent().getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false);
+
+        apiLevelTextView.append(String.valueOf(Build.VERSION.SDK_INT));
     }
 
     @OnClick(R.id.btn_showAnswer)
