@@ -18,8 +18,14 @@
 
     <Button
         android:id="@+id/btn_showAnswer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/WrapContent"
         android:text="@string/show_answer_button"/>
+
+    <TextView
+        android:id="@+id/tv_apiLevel"
+        style="@style/WrapContent"
+        android:layout_marginTop="@dimen/apiLevel_marginTop"
+        android:textStyle="bold"
+        tools:text="API Level XX"/>
 
 </LinearLayout>
