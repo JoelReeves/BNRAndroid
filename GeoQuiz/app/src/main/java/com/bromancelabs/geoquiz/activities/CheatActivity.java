@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.bromancelabs.geoquiz.R;
@@ -15,6 +16,7 @@ import butterknife.OnClick;
 public class CheatActivity extends AppCompatActivity {
     private static final String EXTRA_ANSWER_IS_TRUE = "com.bromancelabs.geoquiz.activities.answer_is_true";
     private static final String EXTRA_ANSWER_SHOWN = "com.bromancelabs.geoquiz.activities.answer_shown";
+    private static final String CHEAT_TEXT = "cheat_text";
 
     @Bind(R.id.tv_answer) TextView mAnswerTextView;
 
@@ -37,7 +39,22 @@ public class CheatActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        if (savedInstanceState != null) {
+            mAnswerTextView.setText(savedInstanceState.getString(CHEAT_TEXT, ""));
+        }
+
         mAnswerIsTrue = getIntent().getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        final String cheatText = mAnswerTextView.getText().toString();
+        
+        if (!TextUtils.isEmpty(cheatText)) {
+            outState.putString(CHEAT_TEXT, cheatText);
+        }
     }
 
     @OnClick(R.id.btn_showAnswer)
