@@ -1,6 +1,5 @@
 package com.bromancelabs.geoquiz.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -87,8 +86,7 @@ public class QuizActivity extends AppCompatActivity {
     @OnClick(R.id.btn_cheat)
     public void cheatButtonClicked() {
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
-        Intent intent = CheatActivity.newIntent(this, answerIsTrue);
-        startActivity(intent);
+        startActivity(CheatActivity.newIntent(this, answerIsTrue));
     }
 
     @OnClick(R.id.btn_next)
