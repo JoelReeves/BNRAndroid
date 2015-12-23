@@ -1,5 +1,6 @@
 package com.bromancelabs.geoquiz.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -81,6 +82,12 @@ public class QuizActivity extends AppCompatActivity {
 
         Log.d(TAG, "onSaveInstanceState");
         outState.putInt(KEY_INDEX, mCurrentIndex);
+    }
+
+    @OnClick(R.id.btn_cheat)
+    public void cheatButtonClicked() {
+        Intent intent = new Intent(this, CheatActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.btn_next)
