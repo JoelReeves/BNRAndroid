@@ -61,14 +61,12 @@ public class CheatActivity extends AppCompatActivity {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
-                    mAnswerTextView.setVisibility(View.VISIBLE);
-                    mShowAnswer.setVisibility(View.INVISIBLE);
+                    showAnswerHideButton();
                 }
             });
             anim.start();
         } else {
-            mAnswerTextView.setVisibility(View.VISIBLE);
-            mShowAnswer.setVisibility(View.INVISIBLE);
+            showAnswerHideButton();
         }
     }
 
@@ -76,5 +74,10 @@ public class CheatActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown);
         setResult(RESULT_OK, intent);
+    }
+
+    private void showAnswerHideButton() {
+        mAnswerTextView.setVisibility(View.VISIBLE);
+        mShowAnswer.setVisibility(View.INVISIBLE);
     }
 }
