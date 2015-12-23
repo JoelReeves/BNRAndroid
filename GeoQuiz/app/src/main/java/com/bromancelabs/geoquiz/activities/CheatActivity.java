@@ -51,7 +51,7 @@ public class CheatActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
 
         final String cheatText = mAnswerTextView.getText().toString();
-        
+
         if (!TextUtils.isEmpty(cheatText)) {
             outState.putString(CHEAT_TEXT, cheatText);
         }

@@ -18,6 +18,7 @@ import butterknife.OnClick;
 public class QuizActivity extends AppCompatActivity {
     private static final String TAG = QuizActivity.class.getSimpleName();
     private static final String KEY_INDEX = "index";
+    private static final String CHEATER = "cheater";
     private static final int REQUEST_CODE_CHEAT = 0;
 
     @Bind(R.id.tv_question) TextView mQuestionTextView;
@@ -42,6 +43,7 @@ public class QuizActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            mIsCheater = savedInstanceState.getBoolean(CHEATER, false);
         }
 
         ButterKnife.bind(this);
@@ -85,6 +87,7 @@ public class QuizActivity extends AppCompatActivity {
 
         Log.d(TAG, "onSaveInstanceState");
         outState.putInt(KEY_INDEX, mCurrentIndex);
+        outState.putBoolean(CHEATER, mIsCheater);
     }
 
     @Override
