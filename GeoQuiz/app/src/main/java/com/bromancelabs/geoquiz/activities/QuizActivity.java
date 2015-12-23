@@ -67,7 +67,7 @@ public class QuizActivity extends AppCompatActivity {
         super.onStop();
         Log.d(TAG, "onStop() called");
     }
-    
+
     @Override
     public void onDestroy() {
         super.onDestroy();
