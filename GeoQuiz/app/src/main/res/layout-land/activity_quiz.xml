@@ -7,10 +7,8 @@
 
     <TextView
         android:id="@+id/tv_question"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/WrapContent.QuizTextView"
         android:layout_gravity="center_horizontal"
-        android:padding="@dimen/question_padding"
         tools:text="Sample Question"/>
 
     <LinearLayout
@@ -20,20 +18,17 @@
         android:orientation="horizontal">
         <Button
             android:id="@+id/btn_true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/WrapContent"
             android:text="@string/true_button"/>
         <Button
             android:id="@+id/btn_false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/WrapContent"
             android:text="@string/false_button"/>
     </LinearLayout>
 
     <Button
         android:id="@+id/btn_next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/WrapContent"
         android:layout_gravity="bottom|right"
         android:text="@string/next_button"
         android:drawableRight="@drawable/arrow_right"
