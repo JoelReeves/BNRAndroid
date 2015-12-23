@@ -3,7 +3,6 @@ package com.bromancelabs.geoquiz.activities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.bromancelabs.geoquiz.R;
@@ -18,9 +17,6 @@ public class QuizActivity extends AppCompatActivity {
     private static final String TAG = QuizActivity.class.getSimpleName();
     private static final String KEY_INDEX = "index";
 
-    @Bind(R.id.btn_true) Button mTrueButton;
-    @Bind(R.id.btn_false) Button mFalseButton;
-    @Bind(R.id.btn_next) Button mNextButton;
     @Bind(R.id.tv_question) TextView mQuestionTextView;
 
     private Question[] mQuestionBank = new Question[] {
@@ -110,8 +106,8 @@ public class QuizActivity extends AppCompatActivity {
 
     private void checkAnswer(boolean userPressedTrue) {
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
-        int messageResId = 0;
-        int snackBarBackgroundColor = 0;
+        int messageResId;
+        int snackBarBackgroundColor;
 
         if (userPressedTrue == answerIsTrue) {
             messageResId = R.string.correct_snackbar;
