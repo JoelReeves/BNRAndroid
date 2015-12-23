@@ -20,6 +20,7 @@ public class QuizActivity extends AppCompatActivity {
     private static final String TAG = QuizActivity.class.getSimpleName();
     private static final String KEY_INDEX = "index";
     private static final String CHEATER = "cheater";
+    private static final String LAST_QUESTION = "last_question";
     private static final int REQUEST_CODE_CHEAT = 0;
     private static final int LAST_QUESTION_INDEX = 2;
 
@@ -44,12 +45,13 @@ public class QuizActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate(Bundle) called");
 
+        ButterKnife.bind(this);
+
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
             mIsCheater = savedInstanceState.getBoolean(CHEATER, false);
+            mNextButton.setEnabled(savedInstanceState.getBoolean(LAST_QUESTION, false));
         }
-
-        ButterKnife.bind(this);
 
         updateQuestion();
     }
@@ -91,6 +93,7 @@ public class QuizActivity extends AppCompatActivity {
         Log.d(TAG, "onSaveInstanceState");
         outState.putInt(KEY_INDEX, mCurrentIndex);
         outState.putBoolean(CHEATER, mIsCheater);
+        outState.putBoolean(LAST_QUESTION, isLastQuestion());
     }
 
     @Override
@@ -115,7 +118,7 @@ public class QuizActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_next)
     public void nextButtonClicked() {
-        mNextButton.setEnabled(mCurrentIndex != mQuestionBank.length - LAST_QUESTION_INDEX);
+        mNextButton.setEnabled(!isLastQuestion());
         mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
         mIsCheater = false;
         updateQuestion();
@@ -129,6 +132,10 @@ public class QuizActivity extends AppCompatActivity {
     @OnClick(R.id.btn_false)
     public void falseButtonClicked() {
         checkAnswer(false);
+    }
+
+    private boolean isLastQuestion() {
+        return mCurrentIndex == mQuestionBank.length - LAST_QUESTION_INDEX;
     }
 
     private void updateQuestion() {
