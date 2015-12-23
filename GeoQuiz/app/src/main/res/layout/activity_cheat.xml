@@ -18,8 +18,7 @@
 
     <Button
         android:id="@+id/btn_showAnswer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/WrapContent"
         android:text="@string/show_answer_button"/>
 
 </LinearLayout>
