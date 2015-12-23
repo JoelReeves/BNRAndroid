@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.bromancelabs.geoquiz.R;
@@ -20,8 +21,10 @@ public class QuizActivity extends AppCompatActivity {
     private static final String KEY_INDEX = "index";
     private static final String CHEATER = "cheater";
     private static final int REQUEST_CODE_CHEAT = 0;
+    private static final int LAST_QUESTION_INDEX = 2;
 
     @Bind(R.id.tv_question) TextView mQuestionTextView;
+    @Bind(R.id.btn_next) Button mNextButton;
 
     private Question[] mQuestionBank = new Question[] {
         new Question(R.string.question_oceans, true),
@@ -112,6 +115,7 @@ public class QuizActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_next)
     public void nextButtonClicked() {
+        mNextButton.setEnabled(mCurrentIndex != mQuestionBank.length - LAST_QUESTION_INDEX);
         mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
         mIsCheater = false;
         updateQuestion();
