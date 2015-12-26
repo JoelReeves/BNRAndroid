@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,6 @@ import android.widget.EditText;
 import com.bromancelabs.criminalintent.R;
 import com.bromancelabs.criminalintent.models.Crime;
 
-import java.text.DateFormat;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -27,6 +26,7 @@ public class CrimeFragment extends Fragment {
     @Bind(R.id.chk_crime_solved) CheckBox mSolvedCheckbox;
 
     private Crime mCrime;
+    private static final String DATE_FORMAT = "EEEE, MMM, d, yyyy";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +64,7 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-        mDateButton.setText(DateFormat.getDateInstance().format(mCrime.getDate()));
+        mDateButton.setText(DateFormat.format(DATE_FORMAT, mCrime.getDate()));
         mDateButton.setEnabled(false);
 
         mSolvedCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
