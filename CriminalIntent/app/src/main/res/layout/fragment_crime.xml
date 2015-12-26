@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchParent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/et_crime_title"
+        style="@style/MatchWidthWrapHeight"
+        android:hint="@string/crime_title_hint"/>
+
+</LinearLayout>

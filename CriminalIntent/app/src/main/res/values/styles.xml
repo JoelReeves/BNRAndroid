@@ -18,7 +18,7 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
-    <style name="MatchWrap">
+    <style name="MatchWidthWrapHeight">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
