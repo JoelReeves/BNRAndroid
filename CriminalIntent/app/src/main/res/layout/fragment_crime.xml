@@ -4,9 +4,34 @@
     style="@style/MatchParent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/crime_title_label"
+        style="?android:listSeparatorTextViewStyle"/>
+
     <EditText
         android:id="@+id/et_crime_title"
         style="@style/MatchWidthWrapHeight"
         android:hint="@string/crime_title_hint"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/crime_details_label"
+        style="?android:listSeparatorTextViewStyle"/>
+
+    <Button
+        android:id="@+id/crime_date"
+        style="@style/MatchWidthWrapHeight"
+        android:layout_marginLeft="@dimen/crime_date_margins"
+        android:layout_marginRight="@dimen/crime_date_margins"/>
+
+    <CheckBox
+        android:id="@+id/crime_solved"
+        style="@style/MatchWidthWrapHeight"
+        android:layout_marginLeft="@dimen/crime_solved_margins"
+        android:layout_marginRight="@dimen/crime_solved_margins"
+        android:text="@string/crime_solved_label"/>
 
 </LinearLayout>
