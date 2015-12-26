@@ -3,16 +3,22 @@ package com.bromancelabs.criminalintent.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.bromancelabs.criminalintent.R;
 import com.bromancelabs.criminalintent.models.Crime;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CrimeFragment extends Fragment {
+    @Bind(R.id.et_crime_title) EditText mCrimeTitle;
+
     private Crime mCrime;
 
     @Override
@@ -28,6 +34,28 @@ public class CrimeFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_crime, container, false);
         ButterKnife.bind(this, rootView);
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mCrimeTitle.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mCrime.setTitle(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     @Override
