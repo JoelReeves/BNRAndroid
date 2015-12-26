@@ -22,6 +22,7 @@ public class CrimeActivity extends AppCompatActivity {
             fragment = new CrimeFragment();
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
-                    .commit(); }
+                    .commit();
+        }
     }
 }
