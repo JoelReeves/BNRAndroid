@@ -8,6 +8,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.bromancelabs.criminalintent.R;
@@ -17,7 +19,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CrimeFragment extends Fragment {
-    @Bind(R.id.et_crime_title) EditText mCrimeTitle;
+    @Bind(R.id.et_crime_title) EditText mTitleEditText;
+    @Bind(R.id.btn_crime_date) Button mDateButton;
+    @Bind(R.id.chk_crime_solved) CheckBox mSolvedCheckbox;
 
     private Crime mCrime;
 
@@ -40,7 +44,7 @@ public class CrimeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mCrimeTitle.addTextChangedListener(new TextWatcher() {
+        mTitleEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -56,6 +60,9 @@ public class CrimeFragment extends Fragment {
 
             }
         });
+
+        mDateButton.setText(mCrime.getDate().toString());
+        mDateButton.setEnabled(false);
     }
 
     @Override

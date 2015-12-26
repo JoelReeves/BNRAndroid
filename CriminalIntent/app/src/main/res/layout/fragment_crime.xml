@@ -22,13 +22,13 @@
         style="?android:listSeparatorTextViewStyle"/>
 
     <Button
-        android:id="@+id/crime_date"
+        android:id="@+id/btn_crime_date"
         style="@style/MatchWidthWrapHeight"
         android:layout_marginLeft="@dimen/crime_date_margins"
         android:layout_marginRight="@dimen/crime_date_margins"/>
 
     <CheckBox
-        android:id="@+id/crime_solved"
+        android:id="@+id/chk_crime_solved"
         style="@style/MatchWidthWrapHeight"
         android:layout_marginLeft="@dimen/crime_solved_margins"
         android:layout_marginRight="@dimen/crime_solved_margins"
