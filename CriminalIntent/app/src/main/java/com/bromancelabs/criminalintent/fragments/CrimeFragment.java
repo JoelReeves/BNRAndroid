@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import com.bromancelabs.criminalintent.R;
 import com.bromancelabs.criminalintent.models.Crime;
 
+import butterknife.ButterKnife;
+
 public class CrimeFragment extends Fragment {
     private Crime mCrime;
 
@@ -24,6 +26,13 @@ public class CrimeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_crime, container, false);
+        ButterKnife.bind(this, rootView);
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 }
