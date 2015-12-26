@@ -16,6 +16,8 @@ import android.widget.EditText;
 import com.bromancelabs.criminalintent.R;
 import com.bromancelabs.criminalintent.models.Crime;
 
+import java.text.DateFormat;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -62,7 +64,7 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-        mDateButton.setText(mCrime.getDate().toString());
+        mDateButton.setText(DateFormat.getDateInstance().format(mCrime.getDate()));
         mDateButton.setEnabled(false);
 
         mSolvedCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
