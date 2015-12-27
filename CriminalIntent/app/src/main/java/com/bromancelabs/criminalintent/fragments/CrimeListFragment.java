@@ -73,7 +73,7 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onBindViewHolder(CrimeHolder holder, int position) {
             Crime crime = mCrimes.get(position);
-            holder.mTitleTextView.setText(crime.getTitle());
+            holder.bindCrime(crime);
         }
 
         @Override
@@ -87,9 +87,18 @@ public class CrimeListFragment extends Fragment {
         @Bind(R.id.tv_list_item_crime_date) TextView mDateTextView;
         @Bind(R.id.cb_list_item_crime_solved) CheckBox mSolvedCheckBox;
 
+        private Crime mCrime;
+
         public CrimeHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        public void bindCrime(Crime crime) {
+            mCrime = crime;
+            mTitleTextView.setText(mCrime.getTitle());
+            mDateTextView.setText(mCrime.getDate().toString());
+            mSolvedCheckBox.setChecked(mCrime.isSolved());
         }
     }
 }
