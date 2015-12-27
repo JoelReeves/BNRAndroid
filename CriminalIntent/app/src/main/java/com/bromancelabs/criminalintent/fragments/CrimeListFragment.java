@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bromancelabs.criminalintent.R;
 
@@ -36,5 +37,16 @@ public class CrimeListFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    private class CrimeHolder extends RecyclerView.ViewHolder {
+        public TextView mTitleTextView;
+
+        public CrimeHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+            
+            mTitleTextView = (TextView) itemView;
+        }
     }
 }
