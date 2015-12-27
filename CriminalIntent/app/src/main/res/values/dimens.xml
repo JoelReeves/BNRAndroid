@@ -6,4 +6,9 @@
     <!-- CrimeFragment -->
     <dimen name="crime_date_margins">16dp</dimen>
     <dimen name="crime_solved_margins">16dp</dimen>
+
+    <!-- list_item_crime -->
+    <dimen name="list_crime_checkbox_padding">4dp</dimen>
+    <dimen name="list_crime_title_padding">4dp</dimen>
+    <dimen name="list_crime_date_padding">4dp</dimen>
 </resources>
