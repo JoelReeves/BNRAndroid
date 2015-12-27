@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.bromancelabs.criminalintent.R;
@@ -65,7 +66,7 @@ public class CrimeListFragment extends Fragment {
         @Override
         public CrimeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+            View view = layoutInflater.inflate(R.layout.list_item_crime, parent, false);
             return new CrimeHolder(view);
         }
 
@@ -81,14 +82,14 @@ public class CrimeListFragment extends Fragment {
         }
     }
 
-    private class CrimeHolder extends RecyclerView.ViewHolder {
-        public TextView mTitleTextView;
+    public class CrimeHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.tv_list_item_crime_title) TextView mTitleTextView;
+        @Bind(R.id.tv_list_item_crime_date) TextView mDateTextView;
+        @Bind(R.id.cb_list_item_crime_solved) CheckBox mSolvedCheckBox;
 
         public CrimeHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
-            mTitleTextView = (TextView) itemView;
         }
     }
 }
