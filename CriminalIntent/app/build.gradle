@@ -19,9 +19,12 @@ android {
     }
 }
 
+ext.androidSupportVersion = '23.1.1'
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:design:23.1.1'
+    compile "com.android.support:design:${androidSupportVersion}"
+    compile "com.android.support:recyclerview-v7:${androidSupportVersion}"
     compile 'com.jakewharton:butterknife:7.0.1'
 }
