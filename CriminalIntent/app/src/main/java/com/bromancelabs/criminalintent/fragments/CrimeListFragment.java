@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bromancelabs.criminalintent.R;
 import com.bromancelabs.criminalintent.models.Crime;
+import com.bromancelabs.criminalintent.models.CrimeLab;
 
 import java.util.List;
 
@@ -20,6 +21,8 @@ import butterknife.ButterKnife;
 
 public class CrimeListFragment extends Fragment {
     @Bind(R.id.crime_recycler_view) RecyclerView mCrimeRecyclerView;
+
+    private CrimeAdapter mAdapter;
 
     @Nullable
     @Override
@@ -34,12 +37,22 @@ public class CrimeListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        updateUI();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    private void updateUI() {
+        CrimeLab crimeLab = CrimeLab.get(getActivity());
+        List<Crime> crimes = crimeLab.getCrimes();
+
+        mAdapter = new CrimeAdapter(crimes);
+        mCrimeRecyclerView.setAdapter(mAdapter);
     }
 
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
