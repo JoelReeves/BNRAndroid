@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bromancelabs.criminalintent.R;
 import com.bromancelabs.criminalintent.models.Crime;
 import com.bromancelabs.criminalintent.models.CrimeLab;
+import com.bromancelabs.criminalintent.utils.SnackBarUtils;
 
 import java.util.List;
 
@@ -82,7 +83,7 @@ public class CrimeListFragment extends Fragment {
         }
     }
 
-    public class CrimeHolder extends RecyclerView.ViewHolder {
+    public class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @Bind(R.id.tv_list_item_crime_title) TextView mTitleTextView;
         @Bind(R.id.tv_list_item_crime_date) TextView mDateTextView;
         @Bind(R.id.cb_list_item_crime_solved) CheckBox mSolvedCheckBox;
@@ -92,6 +93,7 @@ public class CrimeListFragment extends Fragment {
         public CrimeHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
         }
 
         public void bindCrime(Crime crime) {
@@ -99,6 +101,11 @@ public class CrimeListFragment extends Fragment {
             mTitleTextView.setText(mCrime.getTitle());
             mDateTextView.setText(mCrime.getDate().toString());
             mSolvedCheckBox.setChecked(mCrime.isSolved());
+        }
+
+        @Override
+        public void onClick(View v) {
+            SnackBarUtils.showPlainSnackBar(getActivity(), mCrime.getTitle() + " clicked!");
         }
     }
 }
