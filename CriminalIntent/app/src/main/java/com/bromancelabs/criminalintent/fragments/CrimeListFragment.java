@@ -1,5 +1,6 @@
 package com.bromancelabs.criminalintent.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,9 +13,9 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.bromancelabs.criminalintent.R;
+import com.bromancelabs.criminalintent.activities.CrimeActivity;
 import com.bromancelabs.criminalintent.models.Crime;
 import com.bromancelabs.criminalintent.models.CrimeLab;
-import com.bromancelabs.criminalintent.utils.SnackBarUtils;
 
 import java.util.List;
 
@@ -105,7 +106,7 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            SnackBarUtils.showPlainSnackBar(getActivity(), mCrime.getTitle() + " clicked!");
+            startActivity(new Intent(getActivity(), CrimeActivity.class));
         }
     }
 }
