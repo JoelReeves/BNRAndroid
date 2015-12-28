@@ -28,7 +28,18 @@ public class CrimeFragment extends Fragment {
     @Bind(R.id.btn_crime_date) Button mDateButton;
     @Bind(R.id.chk_crime_solved) CheckBox mSolvedCheckbox;
 
+    private static final String ARG_CRIME_ID = "crime_id";
+
     private Crime mCrime;
+
+    public static CrimeFragment newInstance(UUID crimeId) {
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_CRIME_ID, crimeId);
+
+        CrimeFragment fragment = new CrimeFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
