@@ -116,7 +116,7 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            mRecyclerViewClickedPosition = mCrimeRecyclerView.getChildAdapterPosition(v);
+            mRecyclerViewClickedPosition = getAdapterPosition();
             startActivity(CrimeActivity.newIntent(getActivity(), mCrime.getId()));
         }
     }
