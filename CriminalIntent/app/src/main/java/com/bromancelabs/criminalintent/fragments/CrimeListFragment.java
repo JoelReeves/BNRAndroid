@@ -12,7 +12,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.bromancelabs.criminalintent.R;
-import com.bromancelabs.criminalintent.activities.CrimeActivity;
+import com.bromancelabs.criminalintent.activities.CrimePagerActivity;
 import com.bromancelabs.criminalintent.models.Crime;
 import com.bromancelabs.criminalintent.models.CrimeLab;
 
@@ -115,7 +115,7 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            startActivity(CrimeActivity.newIntent(getActivity(), mCrime.getId()));
+            startActivity(CrimePagerActivity.newIntent(getActivity(), mCrime.getId()));
         }
     }
 }
