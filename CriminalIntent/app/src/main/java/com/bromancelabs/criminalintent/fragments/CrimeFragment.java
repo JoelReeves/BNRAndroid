@@ -14,6 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import com.bromancelabs.criminalintent.R;
+import com.bromancelabs.criminalintent.dialogs.DatePickerFragment;
 import com.bromancelabs.criminalintent.models.Crime;
 import com.bromancelabs.criminalintent.models.CrimeLab;
 
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class CrimeFragment extends Fragment {
     @Bind(R.id.et_crime_title) EditText mTitleEditText;
@@ -28,6 +30,7 @@ public class CrimeFragment extends Fragment {
     @Bind(R.id.chk_crime_solved) CheckBox mSolvedCheckbox;
 
     private static final String ARG_CRIME_ID = "crime_id";
+    private static final String DIALOG_DATE = "dialog_date";
 
     private Crime mCrime;
 
@@ -79,7 +82,6 @@ public class CrimeFragment extends Fragment {
         });
 
         mDateButton.setText(mCrime.getDate().toString());
-        mDateButton.setEnabled(false);
 
         mSolvedCheckbox.setChecked(mCrime.isSolved());
         mSolvedCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -94,5 +96,11 @@ public class CrimeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    @OnClick(R.id.btn_crime_date)
+    public void dateButtonClicked() {
+        DatePickerFragment dialog = new DatePickerFragment();
+        dialog.show(getFragmentManager(), DIALOG_DATE);
     }
 }
