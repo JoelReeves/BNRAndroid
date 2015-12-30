@@ -3,6 +3,7 @@ package com.bromancelabs.criminalintent.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -76,8 +77,10 @@ public class CrimeListFragment extends Fragment {
             case R.id.menu_item_new_crime:
                 Crime crime = new Crime();
                 CrimeLab.get(getActivity()).addCrime(crime);
-
                 startActivity(CrimePagerActivity.newIntent(getActivity(), crime.getId()));
+                return true;
+            case R.id.menu_item_show_subtitle:
+                updateSubtitle();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -93,6 +96,17 @@ public class CrimeListFragment extends Fragment {
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void updateSubtitle() {
+        int crimeCount = CrimeLab.get(getActivity()).getCrimes().size();
+
+        String subtitle = getString(R.string.subtitle_format, crimeCount);
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity.getSupportActionBar() != null) {
+            activity.getSupportActionBar().setSubtitle(subtitle);
         }
     }
 
