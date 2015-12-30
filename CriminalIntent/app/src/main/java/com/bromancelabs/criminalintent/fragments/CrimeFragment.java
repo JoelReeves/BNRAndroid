@@ -1,5 +1,6 @@
 package com.bromancelabs.criminalintent.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import com.bromancelabs.criminalintent.dialogs.DatePickerFragment;
 import com.bromancelabs.criminalintent.models.Crime;
 import com.bromancelabs.criminalintent.models.CrimeLab;
 
+import java.util.Date;
 import java.util.UUID;
 
 import butterknife.Bind;
@@ -97,6 +99,17 @@ public class CrimeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_DATE:
+                Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+                mCrime.setDate(date);
+                mDateButton.setText(mCrime.getDate().toString());
+                break;
+        }
     }
 
     @OnClick(R.id.btn_crime_date)
