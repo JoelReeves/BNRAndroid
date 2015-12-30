@@ -84,7 +84,7 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-        mDateButton.setText(mCrime.getDate().toString());
+        updateDate();
 
         mSolvedCheckbox.setChecked(mCrime.isSolved());
         mSolvedCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -107,7 +107,7 @@ public class CrimeFragment extends Fragment {
             case REQUEST_DATE:
                 Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
                 mCrime.setDate(date);
-                mDateButton.setText(mCrime.getDate().toString());
+                updateDate();
                 break;
         }
     }
@@ -117,5 +117,9 @@ public class CrimeFragment extends Fragment {
         DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
         dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
         dialog.show(getFragmentManager(), DIALOG_DATE);
+    }
+
+    private void updateDate() {
+        mDateButton.setText(mCrime.getDate().toString());
     }
 }
