@@ -7,10 +7,25 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.DatePicker;
 
 import com.bromancelabs.criminalintent.R;
 
+import java.util.Date;
+
 public class DatePickerFragment extends DialogFragment {
+
+    private static final String ARG_DATE = "date";
+
+    private DatePicker mDatePicker;
+
+    public static DatePickerFragment newInstance(Date date) {
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_DATE, date);
+        DatePickerFragment fragment = new DatePickerFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @NonNull
     @Override

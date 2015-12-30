@@ -100,7 +100,7 @@ public class CrimeFragment extends Fragment {
 
     @OnClick(R.id.btn_crime_date)
     public void dateButtonClicked() {
-        DatePickerFragment dialog = new DatePickerFragment();
+        DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
         dialog.show(getFragmentManager(), DIALOG_DATE);
     }
 }
