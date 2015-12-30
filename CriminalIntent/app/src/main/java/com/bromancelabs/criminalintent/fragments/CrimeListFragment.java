@@ -27,6 +27,7 @@ import butterknife.ButterKnife;
 
 public class CrimeListFragment extends Fragment {
     @Bind(R.id.crime_recycler_view) RecyclerView mCrimeRecyclerView;
+    @Bind(R.id.tv_no_crimes) TextView mEmptyTextView;
 
     private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
 
@@ -57,8 +58,6 @@ public class CrimeListFragment extends Fragment {
         }
 
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        updateUI();
     }
 
     @Override
@@ -110,6 +109,11 @@ public class CrimeListFragment extends Fragment {
     private void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
+
+        if (!crimes.isEmpty()) {
+            mEmptyTextView.setVisibility(View.GONE);
+            mCrimeRecyclerView.setVisibility(View.VISIBLE);
+        }
 
         if (mAdapter == null) {
             mAdapter = new CrimeAdapter(crimes);
