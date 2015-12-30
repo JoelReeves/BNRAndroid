@@ -12,7 +12,6 @@ public class CrimeLab {
 
     private CrimeLab(Context context) {
         mCrimes = new ArrayList<>();
-        
     }
 
     public static CrimeLab get(Context context) {
