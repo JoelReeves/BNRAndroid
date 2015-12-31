@@ -6,6 +6,8 @@
     <string name="crime_title_label">Title</string>
     <string name="crime_details_label">Details</string>
     <string name="crime_solved_label">Solved</string>
+    <string name="crime_suspect_text">Choose Suspect</string>
+    <string name="crime_report_text">Send Crime Report</string>
 
     <!-- DatePickerFragment -->
     <string name="date_picker_title">Date of crime:</string>

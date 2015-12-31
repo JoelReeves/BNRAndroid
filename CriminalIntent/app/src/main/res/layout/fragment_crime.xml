@@ -33,5 +33,19 @@
         android:layout_marginLeft="@dimen/crime_solved_margins"
         android:layout_marginRight="@dimen/crime_solved_margins"
         android:text="@string/crime_solved_label"/>
+    
+    <Button
+        android:id="@+id/btn_crime_suspect"
+        style="@style/MatchWidthWrapHeight"
+        android:layout_marginLeft="@dimen/crime_suspect_margins"
+        android:layout_marginRight="@dimen/crime_suspect_margins"
+        android:text="@string/crime_suspect_text"/>
+
+    <Button
+        android:id="@+id/btn_crime_report"
+        style="@style/MatchWidthWrapHeight"
+        android:layout_marginLeft="@dimen/crime_report_margins"
+        android:layout_marginRight="@dimen/crime_report_margins"
+        android:text="@string/crime_report_text"/>
 
 </LinearLayout>
