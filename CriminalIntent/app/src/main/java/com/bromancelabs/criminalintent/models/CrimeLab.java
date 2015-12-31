@@ -50,7 +50,7 @@ public class CrimeLab {
 
     public Crime getCrime(UUID id) {
         CrimeCursorWrapper cursor = queryCrimes(CrimeTable.Cols.UUID + " = ?", new String[] { id.toString() });
-        
+
         try {
             if (cursor.getCount() == 0) {
                 return null;
