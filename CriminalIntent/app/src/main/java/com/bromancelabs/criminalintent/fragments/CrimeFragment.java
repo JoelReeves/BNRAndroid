@@ -2,6 +2,7 @@ package com.bromancelabs.criminalintent.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -34,13 +35,17 @@ public class CrimeFragment extends Fragment {
     @Bind(R.id.et_crime_title) EditText mTitleEditText;
     @Bind(R.id.btn_crime_date) Button mDateButton;
     @Bind(R.id.chk_crime_solved) CheckBox mSolvedCheckbox;
+    @Bind(R.id.btn_crime_suspect) Button mSuspectButton;
 
     private static final String DATE_FORMAT = "EEE, MMM dd";
     private static final String ARG_CRIME_ID = "crime_id";
     private static final String DIALOG_DATE = "dialog_date";
     private static final int REQUEST_DATE = 0;
+    private static final int REQUEST_CONTACT = 1;
 
     private Crime mCrime;
+
+    private Intent mPickContact;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -99,6 +104,10 @@ public class CrimeFragment extends Fragment {
                 mCrime.setSolved(isChecked);
             }
         });
+
+        if (mCrime.getSuspect() != null) {
+            mSuspectButton.setText(mCrime.getSuspect());
+        }
     }
 
     @Override
@@ -149,6 +158,12 @@ public class CrimeFragment extends Fragment {
         DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
         dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
         dialog.show(getFragmentManager(), DIALOG_DATE);
+    }
+
+    @OnClick(R.id.btn_crime_suspect)
+    public void suspectButtonClicked() {
+        mPickContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        startActivityForResult(mPickContact, REQUEST_CONTACT);
     }
 
     @OnClick(R.id.btn_crime_report)
