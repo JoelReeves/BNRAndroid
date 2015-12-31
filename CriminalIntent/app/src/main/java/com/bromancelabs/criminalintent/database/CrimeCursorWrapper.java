@@ -6,6 +6,9 @@ import android.database.CursorWrapper;
 import com.bromancelabs.criminalintent.database.CrimeDbSchema.CrimeTable;
 import com.bromancelabs.criminalintent.models.Crime;
 
+import java.util.Date;
+import java.util.UUID;
+
 public class CrimeCursorWrapper extends CursorWrapper {
 
     public CrimeCursorWrapper(Cursor cursor) {
@@ -18,6 +21,11 @@ public class CrimeCursorWrapper extends CursorWrapper {
         long date = getLong(getColumnIndex(CrimeTable.Cols.DATE));
         int isSolved = getInt(getColumnIndex(CrimeTable.Cols.SOLVED));
 
-        return null;
+        Crime crime = new Crime(UUID.fromString(uuidString));
+        crime.setTitle(title);
+        crime.setDate(new Date(date));
+        crime.setSolved(isSolved != 0);
+
+        return crime;
     }
 }
