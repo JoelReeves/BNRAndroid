@@ -1,6 +1,7 @@
 package com.bromancelabs.criminalintent.fragments;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -79,6 +80,8 @@ public class CrimeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mPickContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+
         mTitleEditText.setText(mCrime.getTitle());
         mTitleEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -109,6 +112,10 @@ public class CrimeFragment extends Fragment {
 
         if (mCrime.getSuspect() != null) {
             mSuspectButton.setText(mCrime.getSuspect());
+        }
+
+        if (getActivity().getPackageManager().resolveActivity(mPickContact, PackageManager.MATCH_DEFAULT_ONLY) == null) {
+            mSuspectButton.setEnabled(false);
         }
     }
 
@@ -191,7 +198,6 @@ public class CrimeFragment extends Fragment {
 
     @OnClick(R.id.btn_crime_suspect)
     public void suspectButtonClicked() {
-        mPickContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
         startActivityForResult(mPickContact, REQUEST_CONTACT);
     }
 
