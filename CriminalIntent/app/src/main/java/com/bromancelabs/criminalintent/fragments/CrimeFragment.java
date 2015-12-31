@@ -118,6 +118,8 @@ public class CrimeFragment extends Fragment {
 
         if (mCrime.getContactId() != 0) {
             mCallSuspectButton.setText(String.valueOf(mCrime.getContactId()));
+        } else {
+            mCallSuspectButton.setEnabled(false);
         }
 
         if (getActivity().getPackageManager().resolveActivity(mPickContact, PackageManager.MATCH_DEFAULT_ONLY) == null) {
@@ -173,6 +175,7 @@ public class CrimeFragment extends Fragment {
 
                             mSuspectButton.setText(suspect);
                             mCallSuspectButton.setText(String.valueOf(contactId));
+                            mCallSuspectButton.setEnabled(true);
                         } finally {
                             c.close();
                         }
