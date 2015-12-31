@@ -11,7 +11,7 @@ public class CrimeBaseHelper extends SQLiteOpenHelper {
     public CrimeBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
     }
-    
+
     @Override
     public void onCreate(SQLiteDatabase db) {
 

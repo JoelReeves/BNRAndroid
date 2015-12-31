@@ -1,6 +1,9 @@
 package com.bromancelabs.criminalintent.models;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.bromancelabs.criminalintent.database.CrimeBaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +11,17 @@ import java.util.UUID;
 
 public class CrimeLab {
     private static CrimeLab sCrimeLab;
+
     private List<Crime> mCrimes;
+
+    private Context mContext;
+
+    private SQLiteDatabase mDatabase;
 
     private CrimeLab(Context context) {
         mCrimes = new ArrayList<>();
+        mContext = context.getApplicationContext();
+        mDatabase = new CrimeBaseHelper(mContext).getWritableDatabase();
     }
 
     public static CrimeLab get(Context context) {
