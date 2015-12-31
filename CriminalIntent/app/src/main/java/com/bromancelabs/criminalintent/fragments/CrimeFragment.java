@@ -151,6 +151,16 @@ public class CrimeFragment extends Fragment {
         dialog.show(getFragmentManager(), DIALOG_DATE);
     }
 
+    @OnClick(R.id.btn_crime_report)
+    public void sendReportButtonClicked() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject));
+        intent = Intent.createChooser(intent, getString(R.string.send_report));
+        startActivity(intent);
+    }
+
     private void updateDate() {
         mDateButton.setText(mCrime.getDate().toString());
     }
