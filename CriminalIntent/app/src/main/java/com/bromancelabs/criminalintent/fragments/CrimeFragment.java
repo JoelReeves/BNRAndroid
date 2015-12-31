@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,6 +35,7 @@ public class CrimeFragment extends Fragment {
     @Bind(R.id.btn_crime_date) Button mDateButton;
     @Bind(R.id.chk_crime_solved) CheckBox mSolvedCheckbox;
 
+    private static final String DATE_FORMAT = "EEE, MMM dd";
     private static final String ARG_CRIME_ID = "crime_id";
     private static final String DIALOG_DATE = "dialog_date";
     private static final int REQUEST_DATE = 0;
@@ -151,5 +153,16 @@ public class CrimeFragment extends Fragment {
 
     private void updateDate() {
         mDateButton.setText(mCrime.getDate().toString());
+    }
+
+    private String getCrimeReport() {
+        String solvedString = mCrime.isSolved() ? getString(R.string.crime_report_solved) : getString(R.string.crime_report_unsolved);
+
+        String dateString = DateFormat.format(DATE_FORMAT, mCrime.getDate()).toString();
+
+        String suspect = mCrime.getSuspect();
+        suspect = suspect == null ? getString(R.string.crime_report_no_suspect) : getString(R.string.crime_report_suspect, suspect);
+
+        return getString(R.string.crime_report, mCrime.getTitle(), dateString, solvedString, suspect);
     }
 }
