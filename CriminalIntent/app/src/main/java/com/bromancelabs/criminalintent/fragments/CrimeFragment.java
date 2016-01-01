@@ -149,21 +149,17 @@ public class CrimeFragment extends Fragment {
                     String[] queryFields = new String[] {ContactsContract.Contacts.DISPLAY_NAME};
 
                     // Perform your query - the contactUri is like a "where" clause here
-                    Cursor c = getActivity().getContentResolver().query(contactUri, queryFields, null, null, null);
+                    Cursor cursor = getActivity().getContentResolver().query(contactUri, queryFields, null, null, null);
 
-                    if (c != null) {
+                    if (cursor != null && cursor.getCount() > 0) {
                         try {
-                            // Double-check that you actually got results
-                            if (c.getCount() == 0) {
-                                return;
-                            }
                             // Pull out the first column of the first row of data - that is your suspect's name.
-                            c.moveToFirst();
-                            String suspect = c.getString(0);
+                            cursor.moveToFirst();
+                            String suspect = cursor.getString(0);
                             mCrime.setSuspect(suspect);
                             mSuspectButton.setText(suspect);
                         } finally {
-                            c.close();
+                            cursor.close();
                         }
                     }
                 }
