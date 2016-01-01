@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchWidthWrapHeight"
+    android:layout_marginTop="@dimen/activity_horizontal_margin"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin">
+    
+    <LinearLayout
+        style="@style/WrapContent"
+        android:orientation="vertical"
+        android:layout_marginRight="@dimen/linearlayout_marginRight">
+
+        <ImageView
+            android:id="@+id/iv_crime_photo"
+            android:layout_width="@dimen/imageview_width_height"
+            android:layout_height="@dimen/imageview_width_height"
+            android:scaleType="centerInside"
+            android:background="@android:color/darker_gray"
+            android:cropToPadding="true"/>
+        
+        <ImageButton
+            android:id="@+id/ib_crime_camera"
+            style="@style/MatchWidthWrapHeight"
+            android:src="@android:drawable/ic_menu_camera"/>
+
+    </LinearLayout>
+    
+    <LinearLayout
+        style="@style/WrapContent"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/crime_title_label"
+            style="?android:listSeparatorTextViewStyle"/>
+
+        <EditText
+            android:id="@+id/et_crime_title"
+            style="@style/MatchWidthWrapHeight"
+            android:layout_marginRight="@dimen/edittext_marginRight"
+            android:hint="@string/crime_title_hint"/>
+
+    </LinearLayout>
+
+</LinearLayout>
