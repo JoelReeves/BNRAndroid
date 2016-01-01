@@ -44,6 +44,7 @@ public class CrimeFragment extends Fragment {
     @Bind(R.id.btn_crime_suspect) Button mSuspectButton;
     @Bind(R.id.btn_call_suspect) Button mCallSuspectButton;
 
+    private static final String TAG = CrimeFragment.class.getSimpleName();
     private static final String DATE_FORMAT = "EEE, MMM dd";
     private static final String ARG_CRIME_ID = "crime_id";
     private static final String DIALOG_DATE = "dialog_date";
@@ -230,17 +231,15 @@ public class CrimeFragment extends Fragment {
         mCursor = getActivity().getContentResolver().query(contactUri, columns, null, null, null);
 
         if (mCursor != null && mCursor.getCount() > 0) {
-            Log.d("Crime", "cursor contents: " + DatabaseUtils.dumpCursorToString(mCursor));
+            Log.d(TAG, "Cursor display name and ID: " + DatabaseUtils.dumpCursorToString(mCursor));
             try {
                 mCursor.moveToFirst();
                 String suspect = mCursor.getString(0);
                 mCrime.setSuspect(suspect);
+                mSuspectButton.setText(suspect);
 
                 long contactId = mCursor.getLong(1);
                 mCrime.setContactId(contactId);
-
-                mSuspectButton.setText(suspect);
-                mCallSuspectButton.setEnabled(true);
             } finally {
                 mCursor.close();
             }
@@ -256,12 +255,16 @@ public class CrimeFragment extends Fragment {
 
         mCursor = getActivity().getContentResolver().query(contentUri, fields, selectClause, selectParams, null);
 
-        if(mCursor != null && mCursor.getCount() > 0) {
-            Log.d("Crime", "cursor contents: " + DatabaseUtils.dumpCursorToString(mCursor));
+        if (mCursor == null || mCursor.getCount() == 0) {
+            mCallSuspectButton.setEnabled(false);
+        } else {
+            Log.d(TAG, "Cursor phone number: " + DatabaseUtils.dumpCursorToString(mCursor));
             try {
                 mCursor.moveToFirst();
                 String number = mCursor.getString(0);
                 mPhoneNumber = Uri.parse("tel:" + number);
+
+                mCallSuspectButton.setEnabled(true);
             }
             finally {
                 mCursor.close();
