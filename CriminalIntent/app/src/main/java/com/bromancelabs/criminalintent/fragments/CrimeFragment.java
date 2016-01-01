@@ -3,6 +3,7 @@ package com.bromancelabs.criminalintent.fragments;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -29,6 +30,7 @@ import com.bromancelabs.criminalintent.R;
 import com.bromancelabs.criminalintent.dialogs.DatePickerFragment;
 import com.bromancelabs.criminalintent.models.Crime;
 import com.bromancelabs.criminalintent.models.CrimeLab;
+import com.bromancelabs.criminalintent.utils.PictureUtils;
 
 import java.io.File;
 import java.util.Date;
@@ -139,6 +141,8 @@ public class CrimeFragment extends Fragment {
             Uri uri = Uri.fromFile(mPhotoFile);
             mCaptureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         }
+
+        updatePhotoView();
     }
 
     @Override
@@ -185,6 +189,10 @@ public class CrimeFragment extends Fragment {
                         }
                     }
                 }
+
+            case REQUEST_PHOTO:
+                updatePhotoView();
+                break;
         }
     }
 
@@ -247,5 +255,14 @@ public class CrimeFragment extends Fragment {
         suspect = suspect == null ? getString(R.string.crime_report_no_suspect) : getString(R.string.crime_report_suspect, suspect);
 
         return getString(R.string.crime_report, mCrime.getTitle(), dateString, solvedString, suspect);
+    }
+
+    private void updatePhotoView() {
+        if (mPhotoFile == null || !mPhotoFile.exists()) {
+            mPhotoView.setImageDrawable(null);
+        } else {
+            Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
+            mPhotoView.setImageBitmap(bitmap);
+        }
     }
 }
