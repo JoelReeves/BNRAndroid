@@ -21,12 +21,15 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.bromancelabs.criminalintent.R;
 import com.bromancelabs.criminalintent.dialogs.DatePickerFragment;
 import com.bromancelabs.criminalintent.models.Crime;
 import com.bromancelabs.criminalintent.models.CrimeLab;
 
+import java.io.File;
 import java.util.Date;
 import java.util.UUID;
 
@@ -39,6 +42,8 @@ public class CrimeFragment extends Fragment {
     @Bind(R.id.btn_crime_date) Button mDateButton;
     @Bind(R.id.chk_crime_solved) CheckBox mSolvedCheckbox;
     @Bind(R.id.btn_crime_suspect) Button mSuspectButton;
+    @Bind(R.id.ib_crime_camera) ImageButton mPhotoButton;
+    @Bind(R.id.iv_crime_photo) ImageView mPhotoView;
 
     private static final String DATE_FORMAT = "EEE, MMM dd";
     private static final String ARG_CRIME_ID = "crime_id";
@@ -49,6 +54,8 @@ public class CrimeFragment extends Fragment {
     private Crime mCrime;
 
     private Intent mPickContact;
+
+    private File mPhotoFile;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -66,6 +73,7 @@ public class CrimeFragment extends Fragment {
 
         UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
+        mPhotoFile = CrimeLab.get(getActivity()).getPhotoFile(mCrime);
     }
 
     @Nullable
