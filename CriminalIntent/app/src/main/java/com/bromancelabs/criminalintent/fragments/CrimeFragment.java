@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -50,10 +51,12 @@ public class CrimeFragment extends Fragment {
     private static final String DIALOG_DATE = "dialog_date";
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_CONTACT = 1;
+    private static final int REQUEST_PHOTO= 2;
 
     private Crime mCrime;
 
     private Intent mPickContact;
+    private Intent mCaptureImage;
 
     private File mPhotoFile;
 
@@ -88,7 +91,10 @@ public class CrimeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        PackageManager packageManager = getActivity().getPackageManager();
+
         mPickContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        mCaptureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         mTitleEditText.setText(mCrime.getTitle());
         mTitleEditText.addTextChangedListener(new TextWatcher() {
@@ -122,8 +128,16 @@ public class CrimeFragment extends Fragment {
             mSuspectButton.setText(mCrime.getSuspect());
         }
 
-        if (getActivity().getPackageManager().resolveActivity(mPickContact, PackageManager.MATCH_DEFAULT_ONLY) == null) {
+        if (packageManager.resolveActivity(mPickContact, PackageManager.MATCH_DEFAULT_ONLY) == null) {
             mSuspectButton.setEnabled(false);
+        }
+
+        boolean canTakePhoto = mPhotoFile != null && mCaptureImage.resolveActivity(packageManager) != null;
+        mPhotoButton.setEnabled(canTakePhoto);
+
+        if (canTakePhoto) {
+            Uri uri = Uri.fromFile(mPhotoFile);
+            mCaptureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         }
     }
 
@@ -213,6 +227,11 @@ public class CrimeFragment extends Fragment {
         intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject));
         intent = Intent.createChooser(intent, getString(R.string.send_report));
         startActivity(intent);
+    }
+
+    @OnClick(R.id.ib_crime_camera)
+    public void photoButtonClicked() {
+        startActivityForResult(mCaptureImage, REQUEST_PHOTO);
     }
 
     private void updateDate() {
