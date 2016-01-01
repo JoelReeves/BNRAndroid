@@ -27,6 +27,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.bromancelabs.criminalintent.R;
+import com.bromancelabs.criminalintent.dialogs.CrimeSuspectDialogFragment;
 import com.bromancelabs.criminalintent.dialogs.DatePickerFragment;
 import com.bromancelabs.criminalintent.models.Crime;
 import com.bromancelabs.criminalintent.models.CrimeLab;
@@ -51,6 +52,7 @@ public class CrimeFragment extends Fragment {
     private static final String DATE_FORMAT = "EEE, MMM dd";
     private static final String ARG_CRIME_ID = "crime_id";
     private static final String DIALOG_DATE = "dialog_date";
+    private static final String DIALOG_PHOTO = "dialog_photo";
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_CONTACT = 1;
     private static final int REQUEST_PHOTO= 2;
@@ -240,6 +242,12 @@ public class CrimeFragment extends Fragment {
     @OnClick(R.id.ib_crime_camera)
     public void photoButtonClicked() {
         startActivityForResult(mCaptureImage, REQUEST_PHOTO);
+    }
+
+    @OnClick(R.id.iv_crime_photo)
+    public void photoImageClicked() {
+        CrimeSuspectDialogFragment dialog = CrimeSuspectDialogFragment.newInstance(mPhotoFile);
+        dialog.show(getFragmentManager(), DIALOG_PHOTO);
     }
 
     private void updateDate() {
