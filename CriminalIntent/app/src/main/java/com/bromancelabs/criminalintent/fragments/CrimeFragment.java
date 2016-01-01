@@ -3,6 +3,7 @@ package com.bromancelabs.criminalintent.fragments;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -12,6 +13,7 @@ import android.support.v4.app.ShareCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,6 +53,10 @@ public class CrimeFragment extends Fragment {
     private Crime mCrime;
 
     private Intent mPickContact;
+
+    private Uri mPhoneNumber;
+
+    private Cursor mCursor;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -116,11 +122,7 @@ public class CrimeFragment extends Fragment {
             mSuspectButton.setText(mCrime.getSuspect());
         }
 
-        if (mCrime.getContactId() != 0) {
-            mCallSuspectButton.setText(String.valueOf(mCrime.getContactId()));
-        } else {
-            mCallSuspectButton.setEnabled(false);
-        }
+        mCallSuspectButton.setEnabled(mCrime.getSuspect() != null);
 
         if (getActivity().getPackageManager().resolveActivity(mPickContact, PackageManager.MATCH_DEFAULT_ONLY) == null) {
             mSuspectButton.setEnabled(false);
@@ -151,35 +153,8 @@ public class CrimeFragment extends Fragment {
 
             case REQUEST_CONTACT:
                 if (data != null) {
-                    Uri contactUri = data.getData();
-
-                    // Specify which fields you want your query to return values for.
-                    String[] queryFields = new String[] {ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.Contacts._ID};
-
-                    // Perform your query - the contactUri is like a "where" clause here
-                    Cursor c = getActivity().getContentResolver().query(contactUri, queryFields, null, null, null);
-
-                    if (c != null) {
-                        try {
-                            // Double-check that you actually got results
-                            if (c.getCount() == 0) {
-                                return;
-                            }
-                            // Pull out the first column of the first row of data - that is your suspect's name.
-                            c.moveToFirst();
-                            String suspect = c.getString(0);
-                            mCrime.setSuspect(suspect);
-
-                            long contactId = c.getLong(1);
-                            mCrime.setContactId(contactId);
-
-                            mSuspectButton.setText(suspect);
-                            mCallSuspectButton.setText(String.valueOf(contactId));
-                            mCallSuspectButton.setEnabled(true);
-                        } finally {
-                            c.close();
-                        }
-                    }
+                    queryCrimeSuspect(data);
+                    queryCrimeSuspectPhoneNumber();
                 }
         }
     }
@@ -217,29 +192,7 @@ public class CrimeFragment extends Fragment {
 
     @OnClick(R.id.btn_call_suspect)
     public void callSuspectButtonClicked() {
-        Uri contentUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-
-        String[] fields = {ContactsContract.CommonDataKinds.Phone.NUMBER};
-        String selectClause = ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?";
-        String[] selectParams = {Long.toString(mCrime.getContactId())};
-
-        Cursor cursor = getActivity().getContentResolver().query(contentUri, fields, selectClause, selectParams, null);
-
-        if(cursor != null) {
-            try {
-                if (cursor.getCount() == 0) {
-                    return;
-                }
-
-                cursor.moveToFirst();
-                String number = cursor.getString(0);
-                Uri phoneNumber = Uri.parse("tel:" + number);
-                startActivity(new Intent(Intent.ACTION_DIAL, phoneNumber));
-            }
-            finally {
-                cursor.close();
-            }
-        }
+        startActivity(new Intent(Intent.ACTION_DIAL, mPhoneNumber));
     }
 
     @OnClick(R.id.btn_crime_report)
@@ -265,5 +218,54 @@ public class CrimeFragment extends Fragment {
         suspect = suspect == null ? getString(R.string.crime_report_no_suspect) : getString(R.string.crime_report_suspect, suspect);
 
         return getString(R.string.crime_report, mCrime.getTitle(), dateString, solvedString, suspect);
+    }
+
+    private void queryCrimeSuspect(Intent intent) {
+        Uri contactUri = intent.getData();
+
+        // Specify which database columns you want your query to return values for.
+        String[] columns = new String[] {ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.Contacts._ID};
+
+        // Perform your query - the contactUri is like a "where" clause here
+        mCursor = getActivity().getContentResolver().query(contactUri, columns, null, null, null);
+
+        if (mCursor != null && mCursor.getCount() > 0) {
+            Log.d("Crime", "cursor contents: " + DatabaseUtils.dumpCursorToString(mCursor));
+            try {
+                mCursor.moveToFirst();
+                String suspect = mCursor.getString(0);
+                mCrime.setSuspect(suspect);
+
+                long contactId = mCursor.getLong(1);
+                mCrime.setContactId(contactId);
+
+                mSuspectButton.setText(suspect);
+                mCallSuspectButton.setEnabled(true);
+            } finally {
+                mCursor.close();
+            }
+        }
+    }
+
+    private void queryCrimeSuspectPhoneNumber() {
+        Uri contentUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+
+        String[] fields = {ContactsContract.CommonDataKinds.Phone.NUMBER};
+        String selectClause = ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?";
+        String[] selectParams = {Long.toString(mCrime.getContactId())};
+
+        mCursor = getActivity().getContentResolver().query(contentUri, fields, selectClause, selectParams, null);
+
+        if(mCursor != null && mCursor.getCount() > 0) {
+            Log.d("Crime", "cursor contents: " + DatabaseUtils.dumpCursorToString(mCursor));
+            try {
+                mCursor.moveToFirst();
+                String number = mCursor.getString(0);
+                mPhoneNumber = Uri.parse("tel:" + number);
+            }
+            finally {
+                mCursor.close();
+            }
+        }
     }
 }
