@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.bromancelabs.beatbox.R;
 
@@ -42,5 +43,14 @@ public class BeatBoxFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    private class SoundHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.btn_list_item_sound) Button mButton;
+
+        public SoundHolder(LayoutInflater inflater, ViewGroup container) {
+            super(inflater.inflate(R.layout.list_item_sound_button, container, false));
+            ButterKnife.bind(this, itemView);
+        }
     }
 }
