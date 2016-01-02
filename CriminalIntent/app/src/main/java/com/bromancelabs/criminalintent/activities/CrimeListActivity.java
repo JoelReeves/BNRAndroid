@@ -7,7 +7,9 @@ import com.bromancelabs.criminalintent.fragments.CrimeFragment;
 import com.bromancelabs.criminalintent.fragments.CrimeListFragment;
 import com.bromancelabs.criminalintent.models.Crime;
 
-public class CrimeListActivity extends SingleFragmentActivity implements CrimeListFragment.Callbacks {
+public class CrimeListActivity extends SingleFragmentActivity implements
+        CrimeListFragment.Callbacks,
+        CrimeFragment.Callbacks {
 
     @Override
     protected Fragment createFragment() {
@@ -30,5 +32,10 @@ public class CrimeListActivity extends SingleFragmentActivity implements CrimeLi
                     .replace(R.id.detail_fragment_container, fragment)
                     .commit();
         }
+    }
+
+    public void onCrimeUpdated(Crime crime) {
+        CrimeListFragment listFragment = (CrimeListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        listFragment.updateUI();
     }
 }
