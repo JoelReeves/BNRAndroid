@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import com.bromancelabs.beatbox.R;
 import com.bromancelabs.beatbox.utils.BeatBox;
+import com.bromancelabs.beatbox.utils.Sound;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -77,10 +78,16 @@ public class BeatBoxFragment extends Fragment {
 
     public class SoundHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.btn_list_item_sound) Button mButton;
+        private Sound mSound;
 
         public SoundHolder(LayoutInflater inflater, ViewGroup container) {
             super(inflater.inflate(R.layout.list_item_sound_button, container, false));
             ButterKnife.bind(this, itemView);
+        }
+
+        public void bindSound(Sound sound) {
+            mSound = sound;
+            mButton.setText(mSound.getName());
         }
     }
 }
