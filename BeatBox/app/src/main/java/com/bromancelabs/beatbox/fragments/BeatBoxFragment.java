@@ -14,6 +14,8 @@ import com.bromancelabs.beatbox.R;
 import com.bromancelabs.beatbox.utils.BeatBox;
 import com.bromancelabs.beatbox.utils.Sound;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -48,7 +50,7 @@ public class BeatBoxFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), GRID_COLUMNS));
-        mRecyclerView.setAdapter(new SoundAdapter());
+        mRecyclerView.setAdapter(new SoundAdapter(mBeatBox.getSounds()));
     }
 
     @Override
@@ -58,6 +60,11 @@ public class BeatBoxFragment extends Fragment {
     }
 
     private class SoundAdapter extends RecyclerView.Adapter<SoundHolder> {
+        private List<Sound> mSounds;
+
+        public SoundAdapter(List<Sound> sounds) {
+            mSounds = sounds;
+        }
 
         @Override
         public SoundHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -67,12 +74,13 @@ public class BeatBoxFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(SoundHolder soundHolder, int position) {
-
+            Sound sound = mSounds.get(position);
+            soundHolder.bindSound(sound);
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return mSounds.size();
         }
     }
 
