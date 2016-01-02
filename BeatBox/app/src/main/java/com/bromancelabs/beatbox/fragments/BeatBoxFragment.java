@@ -20,7 +20,7 @@ public class BeatBoxFragment extends Fragment {
 
     private static final int GRID_COLUMNS = 3;
 
-    public BeatBoxFragment newInstance() {
+    public static BeatBoxFragment newInstance() {
         return new BeatBoxFragment();
     }
 
@@ -65,7 +65,7 @@ public class BeatBoxFragment extends Fragment {
         }
     }
 
-    private class SoundHolder extends RecyclerView.ViewHolder {
+    public class SoundHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.btn_list_item_sound) Button mButton;
 
         public SoundHolder(LayoutInflater inflater, ViewGroup container) {
