@@ -45,6 +45,25 @@ public class BeatBoxFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
+    private class SoundAdapter extends RecyclerView.Adapter<SoundHolder> {
+
+        @Override
+        public SoundHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            return new SoundHolder(inflater, parent);
+        }
+
+        @Override
+        public void onBindViewHolder(SoundHolder soundHolder, int position) {
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return 0;
+        }
+    }
+
     private class SoundHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.btn_list_item_sound) Button mButton;
 
