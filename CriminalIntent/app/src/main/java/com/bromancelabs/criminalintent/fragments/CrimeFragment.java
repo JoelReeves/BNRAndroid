@@ -38,6 +38,7 @@ import com.bromancelabs.criminalintent.utils.PictureUtils;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import butterknife.Bind;
@@ -243,7 +244,11 @@ public class CrimeFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.menu_item_delete_crime:
                 CrimeLab.get(getActivity()).deleteCrime(mCrime);
-                getActivity().finish();
+
+                if (getActivity().findViewById(R.id.detail_fragment_container) == null) {
+                    getActivity().finish();
+                } 
+
                 return true;
 
             default:
