@@ -17,7 +17,6 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.bromancelabs.criminalintent.R;
-import com.bromancelabs.criminalintent.activities.CrimePagerActivity;
 import com.bromancelabs.criminalintent.models.Crime;
 import com.bromancelabs.criminalintent.models.CrimeLab;
 
@@ -112,7 +111,8 @@ public class CrimeListFragment extends Fragment {
             case R.id.menu_item_new_crime:
                 Crime crime = new Crime();
                 CrimeLab.get(getActivity()).addCrime(crime);
-                startActivity(CrimePagerActivity.newIntent(getActivity(), crime.getId()));
+                updateUI();
+                mCallbacks.onCrimeSelected(crime);
                 return true;
             case R.id.menu_item_show_subtitle:
                 mSubtitleVisible = !mSubtitleVisible;
@@ -206,7 +206,7 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            startActivity(CrimePagerActivity.newIntent(getActivity(), mCrime.getId()));
+            mCallbacks.onCrimeSelected(mCrime);
         }
     }
 }
