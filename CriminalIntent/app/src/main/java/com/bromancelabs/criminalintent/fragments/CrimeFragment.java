@@ -303,4 +303,9 @@ public class CrimeFragment extends Fragment {
             mPhotoView.setEnabled(true);
         }
     }
+
+    private void updateCrime() {
+        CrimeLab.get(getActivity()).updateCrime(mCrime);
+        mCallbacks.onCrimeUpdated(mCrime);
+    }
 }
