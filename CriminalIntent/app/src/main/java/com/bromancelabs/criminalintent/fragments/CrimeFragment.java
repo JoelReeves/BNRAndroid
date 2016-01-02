@@ -197,6 +197,7 @@ public class CrimeFragment extends Fragment {
                 Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
                 mCrime.setDate(date);
                 updateDate();
+                updateCrime();
                 break;
 
             case REQUEST_CONTACT:
@@ -215,6 +216,7 @@ public class CrimeFragment extends Fragment {
                             cursor.moveToFirst();
                             String suspect = cursor.getString(0);
                             mCrime.setSuspect(suspect);
+                            updateCrime();
                             mSuspectButton.setText(suspect);
                         } finally {
                             cursor.close();
@@ -224,6 +226,7 @@ public class CrimeFragment extends Fragment {
 
             case REQUEST_PHOTO:
                 updatePhotoView();
+                updateCrime();
                 break;
         }
     }
