@@ -21,6 +21,14 @@ public class CrimeListActivity extends SingleFragmentActivity implements CrimeLi
 
     @Override
     public void onCrimeSelected(Crime crime) {
-        
+        if (findViewById(R.id.detail_fragment_container) == null) {
+            startActivity(CrimePagerActivity.newIntent(this, crime.getId()));
+        } else {
+            Fragment fragment = CrimeFragment.newInstance(crime.getId());
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.detail_fragment_container, fragment)
+                    .commit();
+        }
     }
 }
