@@ -247,7 +247,16 @@ public class CrimeFragment extends Fragment {
 
                 if (getActivity().findViewById(R.id.detail_fragment_container) == null) {
                     getActivity().finish();
-                } 
+                } else {
+                    updateCrime();
+                    List<Crime> crimes = CrimeLab.get(getActivity()).getCrimes();
+
+                    if (!crimes.isEmpty()) {
+                        mCallbacks.onCrimeDeleted(crimes.get(0));
+                    } else{
+                        getActivity().findViewById(R.id.ll_fragment_crime).setVisibility(View.GONE);
+                    }
+                }
 
                 return true;
 
