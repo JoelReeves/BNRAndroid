@@ -19,12 +19,17 @@ import java.util.UUID;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class CrimePagerActivity extends AppCompatActivity {
+public class CrimePagerActivity extends AppCompatActivity implements CrimeFragment.Callbacks {
     @Bind(R.id.vp_activity_crime_pager) ViewPager mViewPager;
 
     private static final String EXTRA_CRIME_ID = "com.bromancelabs.criminalintent.activities.crime_id";
 
     private List<Crime> mCrimes;
+
+    @Override
+    public void onCrimeUpdated(Crime crime) {
+
+    }
 
     public static Intent newIntent(Context context, UUID crimeId) {
         Intent intent = new Intent(context, CrimePagerActivity.class);
