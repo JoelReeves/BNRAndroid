@@ -37,6 +37,7 @@ public class BeatBoxFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), GRID_COLUMNS));
+        mRecyclerView.setAdapter(new SoundAdapter());
     }
 
     @Override
