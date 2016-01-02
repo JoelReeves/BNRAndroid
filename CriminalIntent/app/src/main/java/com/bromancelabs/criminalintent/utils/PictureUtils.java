@@ -18,7 +18,7 @@ public class PictureUtils {
         // Figure out how much to scale down by
         int inSampleSize = 1;
         if (srcHeight > destHeight || srcWidth > destWidth) {
-            if (srcWidth > srcHeight) {
+            if (srcWidth < srcHeight) {
                 inSampleSize = Math.round(srcHeight / destHeight);
             } else {
                 inSampleSize = Math.round(srcWidth / destWidth);

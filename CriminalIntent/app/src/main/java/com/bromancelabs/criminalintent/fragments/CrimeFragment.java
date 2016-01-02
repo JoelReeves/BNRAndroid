@@ -13,12 +13,14 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -143,6 +145,15 @@ public class CrimeFragment extends Fragment {
             Uri uri = Uri.fromFile(mPhotoFile);
             mCaptureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         }
+
+        mPhotoView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Log.d("Crime", "ImageView dimensions: " + mPhotoView.getWidth() + " x " + mPhotoView.getHeight());
+                updatePhotoView();
+                mPhotoView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
 
         updatePhotoView();
     }
@@ -270,9 +281,9 @@ public class CrimeFragment extends Fragment {
             mPhotoView.setImageDrawable(null);
             mPhotoView.setEnabled(false);
         } else {
-            mPhotoView.setEnabled(true);
-            Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
+            Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), mPhotoView.getWidth(), mPhotoView.getHeight());
             mPhotoView.setImageBitmap(bitmap);
+            mPhotoView.setEnabled(true);
         }
     }
 }
