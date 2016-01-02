@@ -71,6 +71,7 @@ public class CrimeFragment extends Fragment {
 
     public interface Callbacks {
         void onCrimeUpdated(Crime crime);
+        void onCrimeDeleted(Crime crime);
     }
 
     public static CrimeFragment newInstance(UUID crimeId) {
