@@ -24,8 +24,8 @@ public class BeatBox {
 
     public BeatBox(Context context) {
         mAssets = context.getAssets();
-        loadSounds();
         mSoundPool = new SoundPool(MAX_SOUNDS, AudioManager.STREAM_MUSIC, 0);
+        loadSounds();
     }
 
     private void loadSounds() {
@@ -53,6 +53,13 @@ public class BeatBox {
         AssetFileDescriptor afd = mAssets.openFd(sound.getAssetPath());
         int soundId = mSoundPool.load(afd, 1);
         sound.setSoundId(soundId);
+    }
+
+    public void play(Sound sound) {
+        Integer soundId = sound.getSoundId();
+        if (soundId != null) {
+            mSoundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f);
+        }
     }
 
     public List<Sound> getSounds() {
