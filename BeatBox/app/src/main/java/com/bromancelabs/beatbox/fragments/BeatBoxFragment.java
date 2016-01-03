@@ -18,6 +18,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class BeatBoxFragment extends Fragment {
     @Bind(R.id.rv_fragment_beat_box) RecyclerView mRecyclerView;
@@ -96,6 +97,11 @@ public class BeatBoxFragment extends Fragment {
         public void bindSound(Sound sound) {
             mSound = sound;
             mButton.setText(mSound.getName());
+        }
+
+        @OnClick(R.id.btn_list_item_sound)
+        public void soundButtonClicked() {
+            mBeatBox.play(mSound);
         }
     }
 }
