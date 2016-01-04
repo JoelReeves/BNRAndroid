@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bromancelabs.nerdlauncher.R;
 
@@ -71,5 +72,22 @@ public class NerdLauncherFragment extends Fragment {
         });
 
         Log.i(TAG, "Found " + activities.size() + " activities.");
+    }
+
+    private class ActivityHolder extends RecyclerView.ViewHolder {
+        private ResolveInfo mResolveInfo;
+        private TextView mNameTextView;
+
+        public ActivityHolder(View itemView) {
+            super(itemView);
+            mNameTextView = (TextView) itemView;
+        }
+
+        public void bindActivity(ResolveInfo resolveInfo) {
+            mResolveInfo = resolveInfo;
+            PackageManager pm = getActivity().getPackageManager();
+            String appName = mResolveInfo.loadLabel(pm).toString();
+            mNameTextView.setText(appName);
+        }
     }
 }
