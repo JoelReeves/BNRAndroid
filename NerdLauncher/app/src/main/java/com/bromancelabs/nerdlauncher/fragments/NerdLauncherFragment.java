@@ -72,6 +72,10 @@ public class NerdLauncherFragment extends Fragment {
         });
 
         Log.i(TAG, "Found " + activities.size() + " activities.");
+
+        if (!activities.isEmpty()) {
+            mRecyclerView.setAdapter(new ActivityAdapter(activities));
+        }
     }
 
     private class ActivityAdapter extends RecyclerView.Adapter<ActivityHolder> {
