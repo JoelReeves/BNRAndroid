@@ -129,7 +129,7 @@ public class NerdLauncherFragment extends Fragment {
         }
 
         @OnClick({R.id.iv_app_icon, R.id.tv_app_name})
-        public void appNameClicked() {
+        public void viewHolderClicked() {
             ActivityInfo activityInfo = mResolveInfo.activityInfo;
             Intent i = new Intent(Intent.ACTION_MAIN)
                     .setClassName(activityInfo.applicationInfo.packageName, activityInfo.name)
