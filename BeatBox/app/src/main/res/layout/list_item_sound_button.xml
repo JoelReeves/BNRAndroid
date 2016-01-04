@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Button
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/btn_list_item_sound"
-    android:layout_width="match_parent"
-    android:layout_height="120dp"
-    tools:text="Sound name"/>
+    android:layout_margin="@dimen/button_margins"
+    style="@style/WrapContent">
+
+    <Button
+        android:id="@+id/list_item_sound_button"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="@dimen/button_height"
+        android:layout_gravity="center"
+        tools:text="Sound name"/>
+</FrameLayout>
