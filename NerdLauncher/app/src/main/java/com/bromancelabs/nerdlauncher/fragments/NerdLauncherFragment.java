@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bromancelabs.nerdlauncher.R;
@@ -24,6 +25,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class NerdLauncherFragment extends Fragment {
     @Bind(R.id.rv_fragment_nerd_launcher) RecyclerView mRecyclerView;
@@ -90,7 +92,7 @@ public class NerdLauncherFragment extends Fragment {
         @Override
         public ActivityHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+            View view = layoutInflater.inflate(R.layout.recyclerview_row_item, parent, false);
             return new ActivityHolder(view);
         }
 
@@ -106,14 +108,15 @@ public class NerdLauncherFragment extends Fragment {
         }
     }
 
-    private class ActivityHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ActivityHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.tv_app_name) TextView mNameTextView;
+        @Bind(R.id.iv_app_icon) ImageView mIconImageView;
+
         private ResolveInfo mResolveInfo;
-        private TextView mNameTextView;
 
         public ActivityHolder(View itemView) {
             super(itemView);
-            mNameTextView = (TextView) itemView;
-            mNameTextView.setOnClickListener(this);
+            ButterKnife.bind(this, itemView);
         }
 
         public void bindActivity(ResolveInfo resolveInfo) {
@@ -122,11 +125,11 @@ public class NerdLauncherFragment extends Fragment {
             String appName = mResolveInfo.loadLabel(pm).toString();
             Drawable appIcon = mResolveInfo.loadIcon(pm);
             mNameTextView.setText(appName);
-            mNameTextView.setCompoundDrawablesWithIntrinsicBounds(appIcon, null, null, null);
+            mIconImageView.setImageDrawable(appIcon);
         }
 
-        @Override
-        public void onClick(View v) {
+        @OnClick({R.id.iv_app_icon, R.id.tv_app_name})
+        public void appNameClicked() {
             ActivityInfo activityInfo = mResolveInfo.activityInfo;
             Intent i = new Intent(Intent.ACTION_MAIN)
                     .setClassName(activityInfo.applicationInfo.packageName, activityInfo.name)
