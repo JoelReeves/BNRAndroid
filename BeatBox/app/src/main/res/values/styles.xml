@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/dark_red</item>
         <item name="colorAccent">@color/gray</item>
         <item name="android:windowBackground">@color/soothing_blue</item>
+        <item name="buttonStyle">@style/BeatBoxButton</item>
     </style>
 
     <style name="WrapContent">
@@ -24,7 +25,7 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="BeatBoxButton">
+    <style name="BeatBoxButton" parent="android:style/Widget.Holo.Button">
         <item name="android:background">@color/dark_blue</item>
     </style>
 
