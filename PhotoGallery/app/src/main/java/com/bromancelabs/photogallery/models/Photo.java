@@ -123,4 +123,9 @@ public class Photo {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    @Override
+    public String toString() {
+        return "{ID: " + id + ", " + "Title: " + title + ", " + "URL: " + url + "}";
+    }
 }
