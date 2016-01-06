@@ -104,6 +104,7 @@ public class PhotoGalleryFragment extends Fragment {
                 } else {
                     Log.e(TAG, "Error: " + response.message());
                     dismissDialog(dialog);
+                    showErrorSnackBar();
                 }
             }
 
