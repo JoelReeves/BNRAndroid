@@ -126,6 +126,6 @@ public class Photo {
 
     @Override
     public String toString() {
-        return "{ID: " + id + ", " + "Title: " + title + ", " + "URL: " + url + "}";
+        return "{Title: " + title + "}";
     }
 }
