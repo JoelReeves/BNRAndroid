@@ -29,7 +29,6 @@ dependencies {
     compile "com.android.support:design:${androidSupportVersion}"
     compile "com.android.support:recyclerview-v7:${androidSupportVersion}"
     compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.mcxiaoke.volley:library:1.0.19'
     compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
 }
