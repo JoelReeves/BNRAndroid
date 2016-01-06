@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bromancelabs.photogallery.R;
 import com.bromancelabs.photogallery.models.Photo;
@@ -122,6 +123,44 @@ public class PhotoGalleryFragment extends Fragment {
     private void dismissDialog(Dialog dialog) {
         if (dialog != null) {
             dialog.dismiss();
+        }
+    }
+
+    private class PhotoAdapter extends RecyclerView.Adapter<PhotoHolder> {
+        private List<Photo> mPhotoList;
+
+        public PhotoAdapter(List<Photo> photoList) {
+            mPhotoList = photoList;
+        }
+
+        @Override
+        public PhotoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            TextView textView = new TextView(getActivity());
+            return new PhotoHolder(textView);
+        }
+
+        @Override
+        public void onBindViewHolder(PhotoHolder holder, int position) {
+            Photo photo = mPhotoList.get(position);
+            holder.bindPhoto(photo);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mPhotoList.size();
+        }
+    }
+
+    private class PhotoHolder extends RecyclerView.ViewHolder {
+        private TextView mTitleTextView;
+
+        public PhotoHolder(View itemView) {
+            super(itemView);
+            mTitleTextView = (TextView) itemView;
+        }
+
+        public void bindPhoto(Photo photo) {
+            mTitleTextView.setText(photo.toString());
         }
     }
 }
