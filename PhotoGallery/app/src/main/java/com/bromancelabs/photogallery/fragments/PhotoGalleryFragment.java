@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bromancelabs.photogallery.R;
+import com.bromancelabs.photogallery.views.CustomGridLayoutManager;
 import com.bromancelabs.photogallery.models.Photo;
 import com.bromancelabs.photogallery.models.PhotosObject;
 import com.bromancelabs.photogallery.services.FlickerPhotoService;
@@ -29,7 +29,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PhotoGalleryFragment extends Fragment {
-    private static final int GRID_COLUMNS = 3;
+    private static final int GRID_COLUMN_WIDTH = 150;
     private static final int SCROLL_DOWN = 1;
     private static final int SCROLL_UP = -1;
     private static final String TAG = PhotoGalleryFragment.class.getSimpleName();
@@ -70,7 +70,7 @@ public class PhotoGalleryFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mPhotoRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), GRID_COLUMNS));
+        mPhotoRecyclerView.setLayoutManager(new CustomGridLayoutManager(getActivity(), GRID_COLUMN_WIDTH));
     }
 
     @Override
