@@ -30,6 +30,8 @@ import retrofit2.Response;
 
 public class PhotoGalleryFragment extends Fragment {
     private static final int GRID_COLUMNS = 3;
+    private static final int SCROLL_DOWN = 1;
+    private static final int SCROLL_UP = -1;
     private static final String TAG = PhotoGalleryFragment.class.getSimpleName();
     private static final String URL = "https://api.flickr.com/services/rest/";
     private static final String FLICKER_API_KEY = "b71c3d2d57d035bf593c78dcb4b659d1";
@@ -43,6 +45,8 @@ public class PhotoGalleryFragment extends Fragment {
     private List<Photo> mPhotoList;
 
     private int mCurrentPage = 1;
+    private int mStartingPage;
+    private int mEndingPage;
 
     public static PhotoGalleryFragment newInstance() {
         return new PhotoGalleryFragment();
@@ -97,8 +101,17 @@ public class PhotoGalleryFragment extends Fragment {
             @Override
             public void onResponse(Response<PhotosObject> response) {
                 if (response.isSuccess()) {
-                    final long responseSize = Long.parseLong(response.body().getPhotos().getTotal());
+                    //https://www.flickr.com/services/api/explore/flickr.photos.getRecent
+                    final int responseSize = Integer.parseInt(response.body().getPhotos().getTotal());
                     Log.d(TAG, "JSON response # of photos: " + responseSize);
+
+                    Log.d(TAG, "current page: " + mCurrentPage);
+
+                    mStartingPage = responseSize / (response.body().getPhotos().getPerpage() * response.body().getPhotos().getPages());
+                    Log.d(TAG, "starting page: " + mStartingPage);
+
+                    mEndingPage = responseSize / response.body().getPhotos().getPages();
+                    Log.d(TAG, "ending page: " + mEndingPage);
 
                     dismissDialog(dialog);
 
@@ -124,6 +137,27 @@ public class PhotoGalleryFragment extends Fragment {
     private void setupAdapter() {
         if (isAdded() && !mPhotoList.isEmpty()) {
             mPhotoRecyclerView.setAdapter(new PhotoAdapter(mPhotoList));
+
+            mPhotoRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+
+                    if (dy < 0 && mCurrentPage > mStartingPage) {
+                        if (!mPhotoRecyclerView.canScrollVertically(SCROLL_UP)) {
+                            mCurrentPage--;
+                            retroFitRequest(mCurrentPage);
+                        }
+                    }
+
+                    if (dy > 0 && mCurrentPage < mEndingPage) {
+                        if (!mPhotoRecyclerView.canScrollVertically(SCROLL_DOWN)) {
+                            mCurrentPage++;
+                            retroFitRequest(mCurrentPage);
+                        }
+                    }
+                }
+            });
         } else {
             showErrorSnackBar();
         }
