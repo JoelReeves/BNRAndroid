@@ -3,5 +3,5 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="flicker_photo_height">120dp</dimen>
+    <dimen name="flickr_photo_height">120dp</dimen>
 </resources>

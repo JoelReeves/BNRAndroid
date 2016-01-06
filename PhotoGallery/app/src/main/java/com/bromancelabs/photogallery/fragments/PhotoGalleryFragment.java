@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.bromancelabs.photogallery.R;
 import com.bromancelabs.photogallery.models.Photo;
 import com.bromancelabs.photogallery.models.PhotosObject;
-import com.bromancelabs.photogallery.services.FlickerPhotoService;
+import com.bromancelabs.photogallery.services.FlickrPhotoService;
 import com.bromancelabs.photogallery.services.RetrofitSingleton;
 import com.bromancelabs.photogallery.utils.DialogUtils;
 import com.bromancelabs.photogallery.utils.NetworkUtils;
@@ -32,11 +32,11 @@ public class PhotoGalleryFragment extends Fragment {
     private static final int GRID_COLUMNS = 3;
     private static final String TAG = PhotoGalleryFragment.class.getSimpleName();
     private static final String URL = "https://api.flickr.com/services/rest/";
-    private static final String FLICKER_API_KEY = "b71c3d2d57d035bf593c78dcb4b659d1";
-    private static final String FLICKER_API_METHOD = "flickr.photos.getRecent";
-    private static final String FLICKER_API_FORMAT = "json";
-    private static final String FLICKER_API_JSON_CALLBACK = "1";
-    private static final String FLICKER_API_EXTRAS = "url_s";
+    private static final String FLICKR_API_KEY = "b71c3d2d57d035bf593c78dcb4b659d1";
+    private static final String FLICKR_API_METHOD = "flickr.photos.getRecent";
+    private static final String FLICKR_API_FORMAT = "json";
+    private static final String FLICKR_API_JSON_CALLBACK = "1";
+    private static final String FLICKR_API_EXTRAS = "url_s";
 
     @Bind(R.id.rv_photo_gallery) RecyclerView mPhotoRecyclerView;
 
@@ -87,9 +87,9 @@ public class PhotoGalleryFragment extends Fragment {
     private void retroFitRequest() {
         final Dialog dialog = DialogUtils.showProgressDialog(getActivity());
 
-        FlickerPhotoService mFlickerPhotoService = RetrofitSingleton.getInstance(URL).create(FlickerPhotoService.class);
+        FlickrPhotoService mFlickrPhotoService = RetrofitSingleton.getInstance(URL).create(FlickrPhotoService.class);
 
-        mFlickerPhotoService.getRecentPhotos(FLICKER_API_METHOD, FLICKER_API_KEY, FLICKER_API_FORMAT, FLICKER_API_JSON_CALLBACK, FLICKER_API_EXTRAS).enqueue(new Callback<PhotosObject>() {
+        mFlickrPhotoService.getRecentPhotos(FLICKR_API_METHOD, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, FLICKR_API_EXTRAS).enqueue(new Callback<PhotosObject>() {
             @Override
             public void onResponse(Response<PhotosObject> response) {
                 if (response.isSuccess()) {
