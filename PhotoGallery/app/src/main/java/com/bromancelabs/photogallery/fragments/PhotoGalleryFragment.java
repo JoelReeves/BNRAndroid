@@ -65,7 +65,6 @@ public class PhotoGalleryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mPhotoRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), GRID_COLUMNS));
-
     }
 
     @Override
@@ -100,10 +99,7 @@ public class PhotoGalleryFragment extends Fragment {
                     dismissDialog(dialog);
 
                     mPhotoList = response.body().getPhotos().getPhoto();
-
-                    for (int i = 0; i < mPhotoList.size(); i++) {
-                        Log.d(TAG, "Photo: " + mPhotoList.get(i).toString());
-                    }
+                    setupAdapter();
 
                 } else {
                     Log.e(TAG, "Error: " + response.message());
@@ -115,15 +111,27 @@ public class PhotoGalleryFragment extends Fragment {
             @Override
             public void onFailure(Throwable t) {
                 Log.e(TAG, "Error: " + t.toString());
-                SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_download_error);
+                showErrorSnackBar();
             }
         });
+    }
+
+    private void setupAdapter() {
+        if (isAdded() && !mPhotoList.isEmpty()) {
+            mPhotoRecyclerView.setAdapter(new PhotoAdapter(mPhotoList));
+        } else {
+            showErrorSnackBar();
+        }
     }
 
     private void dismissDialog(Dialog dialog) {
         if (dialog != null) {
             dialog.dismiss();
         }
+    }
+
+    private void showErrorSnackBar() {
+        SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_download_error);
     }
 
     private class PhotoAdapter extends RecyclerView.Adapter<PhotoHolder> {
