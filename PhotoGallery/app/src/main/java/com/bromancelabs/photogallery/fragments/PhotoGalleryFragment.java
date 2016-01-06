@@ -103,7 +103,6 @@ public class PhotoGalleryFragment extends Fragment {
 
                 } else {
                     Log.e(TAG, "Error: " + response.message());
-
                     dismissDialog(dialog);
                 }
             }
@@ -111,6 +110,7 @@ public class PhotoGalleryFragment extends Fragment {
             @Override
             public void onFailure(Throwable t) {
                 Log.e(TAG, "Error: " + t.toString());
+                dismissDialog(dialog);
                 showErrorSnackBar();
             }
         });
