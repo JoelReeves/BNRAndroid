@@ -42,6 +42,8 @@ public class PhotoGalleryFragment extends Fragment {
 
     private List<Photo> mPhotoList;
 
+    private int mCurrentPage = 1;
+
     public static PhotoGalleryFragment newInstance() {
         return new PhotoGalleryFragment();
     }
@@ -74,7 +76,7 @@ public class PhotoGalleryFragment extends Fragment {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_network_unavailable);
         } else {
-            retroFitRequest();
+            retroFitRequest(mCurrentPage);
         }
     }
 
@@ -84,12 +86,14 @@ public class PhotoGalleryFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    private void retroFitRequest() {
+    private void retroFitRequest(int currentPage) {
         final Dialog dialog = DialogUtils.showProgressDialog(getActivity());
+
+        mCurrentPage = currentPage;
 
         FlickerPhotoService mFlickerPhotoService = RetrofitSingleton.getInstance(URL).create(FlickerPhotoService.class);
 
-        mFlickerPhotoService.getRecentPhotos(FLICKER_API_METHOD, FLICKER_API_KEY, FLICKER_API_FORMAT, FLICKER_API_JSON_CALLBACK, FLICKER_API_EXTRAS).enqueue(new Callback<PhotosObject>() {
+        mFlickerPhotoService.getRecentPhotos(FLICKER_API_METHOD, FLICKER_API_KEY, FLICKER_API_FORMAT, FLICKER_API_JSON_CALLBACK, FLICKER_API_EXTRAS, mCurrentPage).enqueue(new Callback<PhotosObject>() {
             @Override
             public void onResponse(Response<PhotosObject> response) {
                 if (response.isSuccess()) {
