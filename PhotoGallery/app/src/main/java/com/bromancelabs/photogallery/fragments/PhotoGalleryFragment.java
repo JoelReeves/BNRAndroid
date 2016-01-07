@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.bromancelabs.photogallery.R;
 import com.bromancelabs.photogallery.models.Photo;
@@ -144,8 +144,8 @@ public class PhotoGalleryFragment extends Fragment {
 
         @Override
         public PhotoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            TextView textView = new TextView(getActivity());
-            return new PhotoHolder(textView);
+            View view = LayoutInflater.from(getActivity()).inflate(R.layout.photo_item, parent, false);
+            return new PhotoHolder(view);
         }
 
         @Override
@@ -161,15 +161,15 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     private class PhotoHolder extends RecyclerView.ViewHolder {
-        private TextView mTitleTextView;
+        @Bind(R.id.iv_fragment_photo_gallery) ImageView mPhotoImageView;
 
         public PhotoHolder(View itemView) {
             super(itemView);
-            mTitleTextView = (TextView) itemView;
+            ButterKnife.bind(this, itemView);
         }
 
         public void bindPhoto(Photo photo) {
-            mTitleTextView.setText(photo.toString());
+
         }
     }
 }
