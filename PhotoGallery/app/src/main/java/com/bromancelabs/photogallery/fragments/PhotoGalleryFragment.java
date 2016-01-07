@@ -1,6 +1,7 @@
 package com.bromancelabs.photogallery.fragments;
 
 import android.app.Dialog;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import com.bromancelabs.photogallery.services.RetrofitSingleton;
 import com.bromancelabs.photogallery.utils.DialogUtils;
 import com.bromancelabs.photogallery.utils.NetworkUtils;
 import com.bromancelabs.photogallery.utils.SnackBarUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -30,6 +32,8 @@ import retrofit2.Response;
 
 public class PhotoGalleryFragment extends Fragment {
     private static final int GRID_COLUMNS = 3;
+    private static final int IMAGEVIEW_WIDTH = 150;
+    private static final int IMAGEVIEW_HEIGHT= 150;
     private static final String TAG = PhotoGalleryFragment.class.getSimpleName();
     private static final String URL = "https://api.flickr.com/services/rest/";
     private static final String FLICKR_API_KEY = "b71c3d2d57d035bf593c78dcb4b659d1";
@@ -160,7 +164,7 @@ public class PhotoGalleryFragment extends Fragment {
         }
     }
 
-    private class PhotoHolder extends RecyclerView.ViewHolder {
+    public class PhotoHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.iv_fragment_photo_gallery) ImageView mPhotoImageView;
 
         public PhotoHolder(View itemView) {
@@ -169,7 +173,13 @@ public class PhotoGalleryFragment extends Fragment {
         }
 
         public void bindPhoto(Photo photo) {
-
+            Picasso.with(getActivity())
+                    .load(Uri.parse(photo.getUrl()))
+                    .placeholder(R.drawable.ic_placeholder_image)
+                    .error(R.drawable.ic_error_image)
+                    .resize(IMAGEVIEW_WIDTH, IMAGEVIEW_HEIGHT)
+                    .centerCrop()
+                    .into(mPhotoImageView);
         }
     }
 }
