@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,10 @@ public class PhotoGalleryFragment extends Fragment {
 
     private List<Photo> mPhotoList;
 
+    private FlickrService mFlickrService;
+
+    private Dialog mProgressDialog;
+
     public static PhotoGalleryFragment newInstance() {
         return new PhotoGalleryFragment();
     }
@@ -79,7 +84,13 @@ public class PhotoGalleryFragment extends Fragment {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_network_unavailable);
         } else {
-            getFlickrRecentPhotos();
+            String searchString = "dog";
+
+            if (TextUtils.isEmpty(searchString)) {
+                getFlickrRecentPhotos();
+            } else {
+                searchFlickrForResults(searchString);
+            }
         }
     }
 
@@ -90,25 +101,25 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     private void getFlickrRecentPhotos() {
-        final Dialog dialog = DialogUtils.showProgressDialog(getActivity());
+        mProgressDialog = DialogUtils.showProgressDialog(getActivity());
 
-        FlickrService flickrService = RetrofitSingleton.getInstance(URL).create(FlickrService.class);
+        mFlickrService = RetrofitSingleton.getInstance(URL).create(FlickrService.class);
 
-        flickrService.getRecentPhotos(FLICKR_API_GET_RECENT_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, FLICKR_API_EXTRAS).enqueue(new Callback<PhotosObject>() {
+        mFlickrService.getRecentPhotos(FLICKR_API_GET_RECENT_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, FLICKR_API_EXTRAS).enqueue(new Callback<PhotosObject>() {
             @Override
             public void onResponse(Response<PhotosObject> response) {
                 if (response.isSuccess()) {
                     final long responseSize = Long.parseLong(response.body().getPhotos().getTotal());
                     Log.d(TAG, "JSON response # of photos: " + responseSize);
 
-                    dismissDialog(dialog);
+                    dismissDialog(mProgressDialog);
 
                     mPhotoList = response.body().getPhotos().getPhoto();
                     setupAdapter();
 
                 } else {
                     Log.e(TAG, "Error: " + response.message());
-                    dismissDialog(dialog);
+                    dismissDialog(mProgressDialog);
                     showErrorSnackBar();
                 }
             }
@@ -116,7 +127,40 @@ public class PhotoGalleryFragment extends Fragment {
             @Override
             public void onFailure(Throwable t) {
                 Log.e(TAG, "Error: " + t.toString());
-                dismissDialog(dialog);
+                dismissDialog(mProgressDialog);
+                showErrorSnackBar();
+            }
+        });
+    }
+
+    private void searchFlickrForResults(String resultString) {
+        mProgressDialog = DialogUtils.showProgressDialog(getActivity());
+
+        mFlickrService = RetrofitSingleton.getInstance(URL).create(FlickrService.class);
+
+        mFlickrService.searchPhotos(FLICKR_API_SEARCH_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, resultString, FLICKR_API_EXTRAS).enqueue(new Callback<PhotosObject>() {
+            @Override
+            public void onResponse(Response<PhotosObject> response) {
+                if (response.isSuccess()) {
+                    final long responseSize = Long.parseLong(response.body().getPhotos().getTotal());
+                    Log.d(TAG, "JSON response # of photos: " + responseSize);
+
+                    dismissDialog(mProgressDialog);
+
+                    mPhotoList = response.body().getPhotos().getPhoto();
+                    setupAdapter();
+
+                } else {
+                    Log.e(TAG, "Error: " + response.message());
+                    dismissDialog(mProgressDialog);
+                    showErrorSnackBar();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.e(TAG, "Error: " + t.toString());
+                dismissDialog(mProgressDialog);
                 showErrorSnackBar();
             }
         });
