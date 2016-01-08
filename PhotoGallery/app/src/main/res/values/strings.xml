@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">PhotoGallery</string>
 
-    <!-- SnackBar messages-->
+    <!-- SnackBar messages -->
     <string name="snackbar_network_unavailable">Please check your network connection.</string>
     <string name="snackbar_download_error">Error retrieving data.</string>
     <string name="snackbar_download_success">Data downloaded successfully.</string>
+
+    <!-- Menu -->
+    <string name="search">Search</string>
+    <string name="clear_search">Clear Search</string>
 </resources>
