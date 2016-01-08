@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import com.bromancelabs.photogallery.R;
 import com.bromancelabs.photogallery.models.Photo;
 import com.bromancelabs.photogallery.models.PhotosObject;
-import com.bromancelabs.photogallery.services.FlickrPhotoService;
+import com.bromancelabs.photogallery.services.FlickrService;
 import com.bromancelabs.photogallery.services.RetrofitSingleton;
 import com.bromancelabs.photogallery.utils.DialogUtils;
 import com.bromancelabs.photogallery.utils.NetworkUtils;
@@ -91,9 +91,9 @@ public class PhotoGalleryFragment extends Fragment {
     private void retroFitRequest() {
         final Dialog dialog = DialogUtils.showProgressDialog(getActivity());
 
-        FlickrPhotoService mFlickrPhotoService = RetrofitSingleton.getInstance(URL).create(FlickrPhotoService.class);
+        FlickrService flickrService = RetrofitSingleton.getInstance(URL).create(FlickrService.class);
 
-        mFlickrPhotoService.getRecentPhotos(FLICKR_API_METHOD, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, FLICKR_API_EXTRAS).enqueue(new Callback<PhotosObject>() {
+        flickrService.getRecentPhotos(FLICKR_API_METHOD, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, FLICKR_API_EXTRAS).enqueue(new Callback<PhotosObject>() {
             @Override
             public void onResponse(Response<PhotosObject> response) {
                 if (response.isSuccess()) {
