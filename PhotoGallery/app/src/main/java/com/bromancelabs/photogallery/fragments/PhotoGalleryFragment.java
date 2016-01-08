@@ -37,7 +37,8 @@ public class PhotoGalleryFragment extends Fragment {
     private static final String TAG = PhotoGalleryFragment.class.getSimpleName();
     private static final String URL = "https://api.flickr.com/services/rest/";
     private static final String FLICKR_API_KEY = "b71c3d2d57d035bf593c78dcb4b659d1";
-    private static final String FLICKR_API_METHOD = "flickr.photos.getRecent";
+    private static final String FLICKR_API_GET_RECENT_PHOTOS = "flickr.photos.getRecent";
+    private static final String FLICKR_API_SEARCH_PHOTOS = "flickr.photos.search";
     private static final String FLICKR_API_FORMAT = "json";
     private static final String FLICKR_API_JSON_CALLBACK = "1";
     private static final String FLICKR_API_EXTRAS = "url_s";
@@ -78,7 +79,7 @@ public class PhotoGalleryFragment extends Fragment {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_network_unavailable);
         } else {
-            retroFitRequest();
+            getFlickrRecentPhotos();
         }
     }
 
@@ -88,12 +89,12 @@ public class PhotoGalleryFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    private void retroFitRequest() {
+    private void getFlickrRecentPhotos() {
         final Dialog dialog = DialogUtils.showProgressDialog(getActivity());
 
         FlickrService flickrService = RetrofitSingleton.getInstance(URL).create(FlickrService.class);
 
-        flickrService.getRecentPhotos(FLICKR_API_METHOD, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, FLICKR_API_EXTRAS).enqueue(new Callback<PhotosObject>() {
+        flickrService.getRecentPhotos(FLICKR_API_GET_RECENT_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, FLICKR_API_EXTRAS).enqueue(new Callback<PhotosObject>() {
             @Override
             public void onResponse(Response<PhotosObject> response) {
                 if (response.isSuccess()) {
