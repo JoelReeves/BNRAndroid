@@ -105,7 +105,8 @@ public class PhotoGalleryFragment extends Fragment {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_network_unavailable);
         } else {
-            getActivity().startService(PollService.newIntent(getActivity()));
+            //getActivity().startService(PollService.newIntent(getActivity()));
+            PollService.setServiceAlarm(getActivity(), true);
         }
     }
 
