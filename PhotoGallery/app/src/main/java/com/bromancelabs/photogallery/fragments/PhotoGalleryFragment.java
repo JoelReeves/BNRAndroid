@@ -2,6 +2,8 @@ package com.bromancelabs.photogallery.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +12,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +30,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.bromancelabs.photogallery.R;
+import com.bromancelabs.photogallery.activities.PhotoGalleryActivity;
 import com.bromancelabs.photogallery.models.Photo;
 import com.bromancelabs.photogallery.models.PhotosObject;
 import com.bromancelabs.photogallery.services.FlickrService;
@@ -57,7 +62,6 @@ public class PhotoGalleryFragment extends Fragment {
     private static final String FLICKR_API_JSON_CALLBACK = "1";
     private static final String FLICKR_API_EXTRAS = "url_s";
     public static final String POLL_INTENT = "poll_intent";
-    public static final String POLL_KEY_QUERY = "query";
     public static final String POLL_KEY_ID = "id";
 
     @Bind(R.id.rv_photo_gallery) RecyclerView mPhotoRecyclerView;
@@ -260,9 +264,27 @@ public class PhotoGalleryFragment extends Fragment {
             Log.i(TAG, "Got an old result: " + resultId);
         } else {
             Log.i(TAG, "Got a new result: " + resultId);
+            displayNotification();
         }
 
         QueryPreferences.setLastResultId(getActivity(), resultId);
+    }
+
+    private void displayNotification() {
+        Intent intent = PhotoGalleryActivity.newIntent(getActivity());
+        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, intent, 0);
+
+        Notification notification = new NotificationCompat.Builder(getActivity())
+                .setTicker(getActivity().getResources().getString(R.string.new_pictures_title))
+                .setSmallIcon(android.R.drawable.ic_menu_report_image)
+                .setContentTitle(getActivity().getResources().getString(R.string.new_pictures_title))
+                .setContentText(getActivity().getResources().getString(R.string.new_pictures_text))
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .build();
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
+        notificationManager.notify(0, notification);
     }
 
     private void dismissDialog(Dialog dialog) {
