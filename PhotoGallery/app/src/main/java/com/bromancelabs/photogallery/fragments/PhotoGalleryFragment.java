@@ -106,6 +106,7 @@ public class PhotoGalleryFragment extends Fragment {
         inflater.inflate(R.menu.fragment_photo_gallery, menu);
 
         final SearchView searchView = (SearchView) menu.findItem(R.id.menu_item_search).getActionView();
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -121,6 +122,13 @@ public class PhotoGalleryFragment extends Fragment {
             public boolean onQueryTextChange(String s) {
                 Log.d(TAG, "QueryTextChange: " + s);
                 return false;
+            }
+        });
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchView.setQuery(QueryPreferences.getSearchQuery(getActivity()), false);
             }
         });
     }
