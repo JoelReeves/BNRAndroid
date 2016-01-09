@@ -90,11 +90,7 @@ public class PhotoGalleryFragment extends Fragment {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_network_unavailable);
         } else {
-            if (TextUtils.isEmpty(QueryPreferences.getSearchQuery(getActivity()))) {
-                getFlickrRecentPhotos();
-            } else {
-                searchFlickrForResults(QueryPreferences.getSearchQuery(getActivity()));
-            }
+            getFlickrPhotos();
         }
     }
 
@@ -117,7 +113,7 @@ public class PhotoGalleryFragment extends Fragment {
                 if (!TextUtils.isEmpty(s)) {
                     QueryPreferences.setSearchQuery(getActivity(), s);
                     cancelPhotosObjectRequests();
-                    searchFlickrForResults(QueryPreferences.getSearchQuery(getActivity()));
+                    getFlickrPhotos();
                 }
                 return true;
             }
@@ -134,7 +130,7 @@ public class PhotoGalleryFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.menu_item_clear:
                 QueryPreferences.setSearchQuery(getActivity(), null);
-                getFlickrRecentPhotos();
+                getFlickrPhotos();
                 return true;
 
             default:
@@ -142,16 +138,17 @@ public class PhotoGalleryFragment extends Fragment {
         }
     }
 
-    private void getFlickrRecentPhotos() {
+    private void getFlickrPhotos() {
         mProgressDialog = DialogUtils.showProgressDialog(getActivity());
         mFlickrService = RetrofitSingleton.getInstance(URL).create(FlickrService.class);
-        mFlickrService.getRecentPhotos(FLICKR_API_GET_RECENT_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, FLICKR_API_EXTRAS).enqueue(mPhotosObjectCallback);
-    }
 
-    private void searchFlickrForResults(String resultString) {
-        mProgressDialog = DialogUtils.showProgressDialog(getActivity());
-        mFlickrService = RetrofitSingleton.getInstance(URL).create(FlickrService.class);
-        mFlickrService.searchPhotos(FLICKR_API_SEARCH_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, resultString, FLICKR_API_EXTRAS).enqueue(mPhotosObjectCallback);
+        final String searchString = QueryPreferences.getSearchQuery(getActivity());
+
+        if (TextUtils.isEmpty(searchString)) {
+            mFlickrService.getRecentPhotos(FLICKR_API_GET_RECENT_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, FLICKR_API_EXTRAS).enqueue(mPhotosObjectCallback);
+        } else {
+            mFlickrService.searchPhotos(FLICKR_API_SEARCH_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, searchString, FLICKR_API_EXTRAS).enqueue(mPhotosObjectCallback);
+        }
     }
 
     private Callback<PhotosObject> mPhotosObjectCallback = new Callback<PhotosObject>() {
