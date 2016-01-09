@@ -105,7 +105,7 @@ public class PhotoGalleryFragment extends Fragment {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_network_unavailable);
         } else {
-            PollService.setServiceAlarm(getActivity(), true);
+            //PollService.setServiceAlarm(getActivity(), true);
         }
     }
 
@@ -152,6 +152,13 @@ public class PhotoGalleryFragment extends Fragment {
                 searchView.setQuery(QueryPreferences.getSearchQuery(getActivity()), false);
             }
         });
+
+        MenuItem toggleItem = menu.findItem(R.id.menu_item_toggle_polling);
+        if (PollService.isServiceAlarmOn(getActivity())) {
+            toggleItem.setTitle(R.string.stop_polling);
+        } else {
+            toggleItem.setTitle(R.string.start_polling);
+        }
     }
 
     @Override
