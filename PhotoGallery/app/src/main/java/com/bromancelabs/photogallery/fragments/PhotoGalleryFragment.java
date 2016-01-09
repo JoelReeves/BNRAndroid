@@ -21,6 +21,7 @@ import com.bromancelabs.photogallery.R;
 import com.bromancelabs.photogallery.models.Photo;
 import com.bromancelabs.photogallery.models.PhotosObject;
 import com.bromancelabs.photogallery.services.FlickrService;
+import com.bromancelabs.photogallery.services.QueryPreferences;
 import com.bromancelabs.photogallery.services.RetrofitSingleton;
 import com.bromancelabs.photogallery.utils.DialogUtils;
 import com.bromancelabs.photogallery.utils.NetworkUtils;
@@ -55,8 +56,6 @@ public class PhotoGalleryFragment extends Fragment {
 
     private Dialog mProgressDialog;
 
-    private String mResultString = "";
-
     public static PhotoGalleryFragment newInstance() {
         return new PhotoGalleryFragment();
     }
@@ -90,10 +89,10 @@ public class PhotoGalleryFragment extends Fragment {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_network_unavailable);
         } else {
-            if (TextUtils.isEmpty(mResultString)) {
+            if (TextUtils.isEmpty(QueryPreferences.getSearchQuery(getActivity()))) {
                 getFlickrRecentPhotos();
             } else {
-                searchFlickrForResults(mResultString);
+                searchFlickrForResults(QueryPreferences.getSearchQuery(getActivity()));
             }
         }
     }
@@ -115,8 +114,9 @@ public class PhotoGalleryFragment extends Fragment {
             public boolean onQueryTextSubmit(String s) {
                 Log.d(TAG, "QueryTextSubmit: " + s);
                 if (!TextUtils.isEmpty(s)) {
+                    QueryPreferences.setSearchQuery(getActivity(), s);
                     cancelPhotosObjectRequests();
-                    searchFlickrForResults(s);
+                    searchFlickrForResults(QueryPreferences.getSearchQuery(getActivity()));
                 }
                 return true;
             }
@@ -169,7 +169,7 @@ public class PhotoGalleryFragment extends Fragment {
 
         if (mFlickrService != null) {
             mFlickrService.getRecentPhotos(FLICKR_API_GET_RECENT_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, FLICKR_API_EXTRAS).cancel();
-            mFlickrService.searchPhotos(FLICKR_API_SEARCH_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, mResultString, FLICKR_API_EXTRAS).cancel();
+            mFlickrService.searchPhotos(FLICKR_API_SEARCH_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, QueryPreferences.getSearchQuery(getActivity()), FLICKR_API_EXTRAS).cancel();
         }
     }
 
