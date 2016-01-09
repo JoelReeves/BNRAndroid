@@ -149,17 +149,14 @@ public class PhotoGalleryFragment extends Fragment {
             if (response.isSuccess()) {
                 final long responseSize = Long.parseLong(response.body().getPhotos().getTotal());
                 Log.d(TAG, "JSON response # of photos: " + responseSize);
-
-                dismissDialog(mProgressDialog);
-
                 mPhotoList = response.body().getPhotos().getPhoto();
                 setupAdapter();
 
             } else {
                 Log.e(TAG, "Error: " + response.message());
-                dismissDialog(mProgressDialog);
                 showErrorSnackBar();
             }
+            dismissDialog(mProgressDialog);
         }
 
         @Override
