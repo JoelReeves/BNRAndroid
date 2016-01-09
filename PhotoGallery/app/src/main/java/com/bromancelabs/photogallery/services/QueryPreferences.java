@@ -7,6 +7,7 @@ public final class QueryPreferences {
 
     private static final String PREF_NAME = "query_preferences";
     private static final String SEARCH_QUERY = "search_query";
+    private static final String LAST_RESULT_ID = "lastResultId";
 
     private QueryPreferences() {}
 
@@ -24,5 +25,13 @@ public final class QueryPreferences {
 
     public static void setSearchQuery(Context context, String query) {
         getEditor(context).putString(SEARCH_QUERY, query).apply();
+    }
+
+    public static String getLastResultId(Context context) {
+        return getPreferences(context).getString(LAST_RESULT_ID, null);
+    }
+
+    public static void setLastResultId(Context context, String id) {
+        getEditor(context).putString(LAST_RESULT_ID, id).apply();
     }
 }
