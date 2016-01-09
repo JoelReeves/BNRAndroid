@@ -1,5 +1,6 @@
 package com.bromancelabs.photogallery.fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.bromancelabs.photogallery.R;
@@ -105,7 +107,8 @@ public class PhotoGalleryFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_photo_gallery, menu);
 
-        final SearchView searchView = (SearchView) menu.findItem(R.id.menu_item_search).getActionView();
+        final MenuItem searchItem = menu.findItem(R.id.menu_item_search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -114,6 +117,8 @@ public class PhotoGalleryFragment extends Fragment {
                 if (!TextUtils.isEmpty(s)) {
                     QueryPreferences.setSearchQuery(getActivity(), s);
                     cancelPhotosObjectRequests();
+                    hideKeyboard();
+                    searchItem.collapseActionView();
                     getFlickrPhotos();
                 }
                 return true;
@@ -208,6 +213,16 @@ public class PhotoGalleryFragment extends Fragment {
 
     private void showErrorSnackBar() {
         SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_download_error);
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+
+        View view = getActivity().getCurrentFocus();
+
+        if (inputMethodManager != null && view != null) {
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     private class PhotoAdapter extends RecyclerView.Adapter<PhotoHolder> {
