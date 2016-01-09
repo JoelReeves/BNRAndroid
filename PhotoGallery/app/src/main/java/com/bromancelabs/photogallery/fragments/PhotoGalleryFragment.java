@@ -113,10 +113,8 @@ public class PhotoGalleryFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                Log.d(TAG, "QueryTextSubmit: " + s);
                 if (!TextUtils.isEmpty(s)) {
                     QueryPreferences.setSearchQuery(getActivity(), s);
-                    cancelPhotosObjectRequests();
                     hideKeyboard();
                     searchItem.collapseActionView();
                     getFlickrPhotos();
@@ -125,7 +123,6 @@ public class PhotoGalleryFragment extends Fragment {
             }
             @Override
             public boolean onQueryTextChange(String s) {
-                Log.d(TAG, "QueryTextChange: " + s);
                 return false;
             }
         });
@@ -152,6 +149,8 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     private void getFlickrPhotos() {
+        cancelPhotosObjectRequests();
+
         mProgressDialog = DialogUtils.showProgressDialog(getActivity());
         mFlickrService = RetrofitSingleton.getInstance(URL).create(FlickrService.class);
 
