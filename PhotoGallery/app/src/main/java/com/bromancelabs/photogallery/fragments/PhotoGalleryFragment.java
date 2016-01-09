@@ -104,8 +104,6 @@ public class PhotoGalleryFragment extends Fragment {
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_network_unavailable);
-        } else {
-            //PollService.setServiceAlarm(getActivity(), true);
         }
     }
 
@@ -170,6 +168,7 @@ public class PhotoGalleryFragment extends Fragment {
                 return true;
             case R.id.menu_item_toggle_polling:
                 startPolling();
+                getActivity().invalidateOptionsMenu();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
