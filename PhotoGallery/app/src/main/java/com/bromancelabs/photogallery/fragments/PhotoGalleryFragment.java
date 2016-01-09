@@ -2,10 +2,15 @@ package com.bromancelabs.photogallery.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -51,6 +56,9 @@ public class PhotoGalleryFragment extends Fragment {
     private static final String FLICKR_API_FORMAT = "json";
     private static final String FLICKR_API_JSON_CALLBACK = "1";
     private static final String FLICKR_API_EXTRAS = "url_s";
+    public static final String POLL_INTENT = "poll_intent";
+    public static final String POLL_KEY_QUERY = "query";
+    public static final String POLL_KEY_ID = "id";
 
     @Bind(R.id.rv_photo_gallery) RecyclerView mPhotoRecyclerView;
 
@@ -59,6 +67,8 @@ public class PhotoGalleryFragment extends Fragment {
     private FlickrService mFlickrService;
 
     private Dialog mProgressDialog;
+
+    private String mLastResultId;
 
     public static PhotoGalleryFragment newInstance() {
         return new PhotoGalleryFragment();
@@ -84,19 +94,25 @@ public class PhotoGalleryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mPhotoRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), GRID_COLUMNS));
-
-        getActivity().startService(PollService.newIntent(getActivity()));
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver, new IntentFilter(POLL_INTENT));
+
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_network_unavailable);
         } else {
-            getFlickrPhotos(QueryPreferences.getSearchQuery(getActivity()));
+            getActivity().startService(PollService.newIntent(getActivity()));
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
     }
 
     @Override
@@ -120,7 +136,7 @@ public class PhotoGalleryFragment extends Fragment {
                     QueryPreferences.setSearchQuery(getActivity(), s);
                     hideKeyboard();
                     searchItem.collapseActionView();
-                    getFlickrPhotos(QueryPreferences.getSearchQuery(getActivity()));
+                    getFlickrPhotos();
                 }
                 return true;
             }
@@ -143,7 +159,7 @@ public class PhotoGalleryFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.menu_item_clear:
                 QueryPreferences.setSearchQuery(getActivity(), null);
-                getFlickrPhotos(QueryPreferences.getSearchQuery(getActivity()));
+                getFlickrPhotos();
                 return true;
 
             default:
@@ -151,7 +167,17 @@ public class PhotoGalleryFragment extends Fragment {
         }
     }
 
-    private void getFlickrPhotos(String searchString) {
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "Query: " + QueryPreferences.getSearchQuery(getActivity()));
+            Log.d(TAG, "ID: " + intent.getStringExtra(POLL_KEY_ID));
+            mLastResultId = intent.getStringExtra(POLL_KEY_ID);
+            getFlickrPhotos();
+        }
+    };
+
+    private void getFlickrPhotos() {
         cancelPhotosObjectRequests();
 
         if (mPhotoAdapter != null) {
@@ -161,7 +187,7 @@ public class PhotoGalleryFragment extends Fragment {
         mProgressDialog = DialogUtils.showProgressDialog(getActivity());
         mFlickrService = RetrofitSingleton.getInstance(URL).create(FlickrService.class);
 
-        searchString = QueryPreferences.getSearchQuery(getActivity());
+        String searchString = QueryPreferences.getSearchQuery(getActivity());
 
         if (TextUtils.isEmpty(searchString)) {
             mFlickrService.getRecentPhotos(FLICKR_API_GET_RECENT_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, FLICKR_API_EXTRAS).enqueue(mPhotosObjectCallback);
@@ -176,8 +202,8 @@ public class PhotoGalleryFragment extends Fragment {
             if (response.isSuccess()) {
                 final long responseSize = Long.parseLong(response.body().getPhotos().getTotal());
                 Log.d(TAG, "JSON response # of photos: " + responseSize);
-                setupAdapter(response.body().getPhotos().getPhoto());
-
+                List<Photo> jsonResponce = response.body().getPhotos().getPhoto();
+                setupAdapter(jsonResponce);
             } else {
                 Log.e(TAG, "Error: " + response.message());
                 showErrorSnackBar();
@@ -202,13 +228,26 @@ public class PhotoGalleryFragment extends Fragment {
         }
     }
 
-    public void setupAdapter(List<Photo> photoList) {
+    private void setupAdapter(List<Photo> photoList) {
         if (isAdded() && !photoList.isEmpty()) {
+            setLastResultId(photoList);
             mPhotoAdapter = new PhotoAdapter(photoList);
             mPhotoRecyclerView.setAdapter(mPhotoAdapter);
         } else {
             showErrorSnackBar();
         }
+    }
+
+    private void setLastResultId(List<Photo> photoList) {
+        String resultId = photoList.get(0).getId();
+
+        if (resultId.equals(mLastResultId)) {
+            Log.i(TAG, "Got an old result: " + resultId);
+        } else {
+            Log.i(TAG, "Got a new result: " + resultId);
+        }
+
+        QueryPreferences.setLastResultId(getActivity(), resultId);
     }
 
     private void dismissDialog(Dialog dialog) {

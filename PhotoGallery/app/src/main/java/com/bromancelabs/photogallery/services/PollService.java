@@ -25,14 +25,12 @@ public class PollService extends IntentService {
             return;
         }
 
-        String query = QueryPreferences.getSearchQuery(this);
         String lastResultId = QueryPreferences.getLastResultId(this);
-        sendMessage(query, lastResultId);
+        sendMessage(lastResultId);
     }
 
-    private void sendMessage(String queryString, String lastResultId) {
+    private void sendMessage(String lastResultId) {
         Intent intent = new Intent(PhotoGalleryFragment.POLL_INTENT);
-        intent.putExtra(PhotoGalleryFragment.POLL_KEY_QUERY, queryString);
         intent.putExtra(PhotoGalleryFragment.POLL_KEY_ID, lastResultId);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
