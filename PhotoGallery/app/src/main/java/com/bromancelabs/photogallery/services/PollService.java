@@ -3,8 +3,9 @@ package com.bromancelabs.photogallery.services;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+import android.support.v4.content.LocalBroadcastManager;
 
+import com.bromancelabs.photogallery.fragments.PhotoGalleryFragment;
 import com.bromancelabs.photogallery.utils.NetworkUtils;
 
 public class PollService extends IntentService {
@@ -24,6 +25,15 @@ public class PollService extends IntentService {
             return;
         }
 
-        Log.i(TAG, "Received an intent: " + intent);
+        String query = QueryPreferences.getSearchQuery(this);
+        String lastResultId = QueryPreferences.getLastResultId(this);
+        sendMessage(query, lastResultId);
+    }
+
+    private void sendMessage(String queryString, String lastResultId) {
+        Intent intent = new Intent(PhotoGalleryFragment.POLL_INTENT);
+        intent.putExtra(PhotoGalleryFragment.POLL_KEY_QUERY, queryString);
+        intent.putExtra(PhotoGalleryFragment.POLL_KEY_ID, lastResultId);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }
