@@ -55,6 +55,8 @@ public class PhotoGalleryFragment extends Fragment {
 
     private List<Photo> mPhotoList;
 
+    private PhotoAdapter mPhotoAdapter;
+
     private FlickrService mFlickrService;
 
     private Dialog mProgressDialog;
@@ -151,6 +153,10 @@ public class PhotoGalleryFragment extends Fragment {
     private void getFlickrPhotos() {
         cancelPhotosObjectRequests();
 
+        if (mPhotoAdapter != null) {
+            mPhotoAdapter.clearAdapter();
+        }
+
         mProgressDialog = DialogUtils.showProgressDialog(getActivity());
         mFlickrService = RetrofitSingleton.getInstance(URL).create(FlickrService.class);
 
@@ -198,7 +204,8 @@ public class PhotoGalleryFragment extends Fragment {
 
     private void setupAdapter() {
         if (isAdded() && !mPhotoList.isEmpty()) {
-            mPhotoRecyclerView.setAdapter(new PhotoAdapter(mPhotoList));
+            mPhotoAdapter = new PhotoAdapter(mPhotoList);
+            mPhotoRecyclerView.setAdapter(mPhotoAdapter);
         } else {
             showErrorSnackBar();
         }
@@ -246,6 +253,12 @@ public class PhotoGalleryFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mPhotoList.size();
+        }
+
+        public void clearAdapter() {
+            final int size = getItemCount();
+            mPhotoList.clear();
+            notifyItemRangeRemoved(0, size);
         }
     }
 
