@@ -105,7 +105,6 @@ public class PhotoGalleryFragment extends Fragment {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_network_unavailable);
         } else {
-            //getActivity().startService(PollService.newIntent(getActivity()));
             PollService.setServiceAlarm(getActivity(), true);
         }
     }
@@ -162,7 +161,9 @@ public class PhotoGalleryFragment extends Fragment {
                 QueryPreferences.setSearchQuery(getActivity(), null);
                 getFlickrPhotos();
                 return true;
-
+            case R.id.menu_item_toggle_polling:
+                startPolling();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -177,6 +178,11 @@ public class PhotoGalleryFragment extends Fragment {
             getFlickrPhotos();
         }
     };
+
+    private void startPolling() {
+        boolean shouldStartAlarm = !PollService.isServiceAlarmOn(getActivity());
+        PollService.setServiceAlarm(getActivity(), shouldStartAlarm);
+    }
 
     private void getFlickrPhotos() {
         cancelPhotosObjectRequests();
