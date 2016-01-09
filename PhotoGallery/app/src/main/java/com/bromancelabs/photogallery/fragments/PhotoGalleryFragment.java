@@ -2,6 +2,7 @@ package com.bromancelabs.photogallery.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,6 +25,7 @@ import com.bromancelabs.photogallery.R;
 import com.bromancelabs.photogallery.models.Photo;
 import com.bromancelabs.photogallery.models.PhotosObject;
 import com.bromancelabs.photogallery.services.FlickrService;
+import com.bromancelabs.photogallery.services.PollService;
 import com.bromancelabs.photogallery.services.QueryPreferences;
 import com.bromancelabs.photogallery.services.RetrofitSingleton;
 import com.bromancelabs.photogallery.utils.DialogUtils;
@@ -85,6 +87,8 @@ public class PhotoGalleryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mPhotoRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), GRID_COLUMNS));
+
+        getActivity().startService(new Intent(getActivity(), PollService.class));
     }
 
     @Override
