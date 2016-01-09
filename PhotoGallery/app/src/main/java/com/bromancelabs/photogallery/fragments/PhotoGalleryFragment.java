@@ -113,7 +113,6 @@ public class PhotoGalleryFragment extends Fragment {
                 Log.d(TAG, "QueryTextSubmit: " + s);
                 if (!TextUtils.isEmpty(s)) {
                     QueryPreferences.setSearchQuery(getActivity(), s);
-                    cancelPhotosObjectRequests();
                     getFlickrPhotos();
                 }
                 return true;
@@ -147,6 +146,8 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     private void getFlickrPhotos() {
+        cancelPhotosObjectRequests();
+
         mProgressDialog = DialogUtils.showProgressDialog(getActivity());
         mFlickrService = RetrofitSingleton.getInstance(URL).create(FlickrService.class);
 
