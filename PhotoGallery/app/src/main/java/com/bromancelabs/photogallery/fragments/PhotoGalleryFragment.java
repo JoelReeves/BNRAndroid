@@ -7,9 +7,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -52,6 +56,8 @@ public class PhotoGalleryFragment extends Fragment {
 
     private Dialog mProgressDialog;
 
+    private String mResultString = "";
+
     public static PhotoGalleryFragment newInstance() {
         return new PhotoGalleryFragment();
     }
@@ -60,6 +66,7 @@ public class PhotoGalleryFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -84,12 +91,10 @@ public class PhotoGalleryFragment extends Fragment {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_network_unavailable);
         } else {
-            String searchString = "dog";
-
-            if (TextUtils.isEmpty(searchString)) {
+            if (TextUtils.isEmpty(mResultString)) {
                 getFlickrRecentPhotos();
             } else {
-                searchFlickrForResults(searchString);
+                searchFlickrForResults(mResultString);
             }
         }
     }
@@ -100,70 +105,78 @@ public class PhotoGalleryFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    private void getFlickrRecentPhotos() {
-        mProgressDialog = DialogUtils.showProgressDialog(getActivity());
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_photo_gallery, menu);
 
-        mFlickrService = RetrofitSingleton.getInstance(URL).create(FlickrService.class);
+        MenuItem searchItem = menu.findItem(R.id.menu_item_search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
 
-        mFlickrService.getRecentPhotos(FLICKR_API_GET_RECENT_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, FLICKR_API_EXTRAS).enqueue(new Callback<PhotosObject>() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onResponse(Response<PhotosObject> response) {
-                if (response.isSuccess()) {
-                    final long responseSize = Long.parseLong(response.body().getPhotos().getTotal());
-                    Log.d(TAG, "JSON response # of photos: " + responseSize);
-
-                    dismissDialog(mProgressDialog);
-
-                    mPhotoList = response.body().getPhotos().getPhoto();
-                    setupAdapter();
-
-                } else {
-                    Log.e(TAG, "Error: " + response.message());
-                    dismissDialog(mProgressDialog);
-                    showErrorSnackBar();
+            public boolean onQueryTextSubmit(String s) {
+                Log.d(TAG, "QueryTextSubmit: " + s);
+                if (!TextUtils.isEmpty(s)) {
+                    cancelPhotosObjectRequests();
+                    searchFlickrForResults(s);
                 }
+                return true;
             }
-
             @Override
-            public void onFailure(Throwable t) {
-                Log.e(TAG, "Error: " + t.toString());
-                dismissDialog(mProgressDialog);
-                showErrorSnackBar();
+            public boolean onQueryTextChange(String s) {
+                Log.d(TAG, "QueryTextChange: " + s);
+                return false;
             }
         });
     }
 
+    private void getFlickrRecentPhotos() {
+        mProgressDialog = DialogUtils.showProgressDialog(getActivity());
+        mFlickrService = RetrofitSingleton.getInstance(URL).create(FlickrService.class);
+        mFlickrService.getRecentPhotos(FLICKR_API_GET_RECENT_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, FLICKR_API_EXTRAS).enqueue(mPhotosObjectCallback);
+    }
+
     private void searchFlickrForResults(String resultString) {
         mProgressDialog = DialogUtils.showProgressDialog(getActivity());
-
         mFlickrService = RetrofitSingleton.getInstance(URL).create(FlickrService.class);
+        mFlickrService.searchPhotos(FLICKR_API_SEARCH_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, resultString, FLICKR_API_EXTRAS).enqueue(mPhotosObjectCallback);
+    }
 
-        mFlickrService.searchPhotos(FLICKR_API_SEARCH_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, resultString, FLICKR_API_EXTRAS).enqueue(new Callback<PhotosObject>() {
-            @Override
-            public void onResponse(Response<PhotosObject> response) {
-                if (response.isSuccess()) {
-                    final long responseSize = Long.parseLong(response.body().getPhotos().getTotal());
-                    Log.d(TAG, "JSON response # of photos: " + responseSize);
+    private Callback<PhotosObject> mPhotosObjectCallback = new Callback<PhotosObject>() {
+        @Override
+        public void onResponse(Response<PhotosObject> response) {
+            if (response.isSuccess()) {
+                final long responseSize = Long.parseLong(response.body().getPhotos().getTotal());
+                Log.d(TAG, "JSON response # of photos: " + responseSize);
 
-                    dismissDialog(mProgressDialog);
+                dismissDialog(mProgressDialog);
 
-                    mPhotoList = response.body().getPhotos().getPhoto();
-                    setupAdapter();
+                mPhotoList = response.body().getPhotos().getPhoto();
+                setupAdapter();
 
-                } else {
-                    Log.e(TAG, "Error: " + response.message());
-                    dismissDialog(mProgressDialog);
-                    showErrorSnackBar();
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Log.e(TAG, "Error: " + t.toString());
+            } else {
+                Log.e(TAG, "Error: " + response.message());
                 dismissDialog(mProgressDialog);
                 showErrorSnackBar();
             }
-        });
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+            Log.e(TAG, "Error: " + t.toString());
+            dismissDialog(mProgressDialog);
+            showErrorSnackBar();
+        }
+    };
+
+    private void cancelPhotosObjectRequests() {
+        dismissDialog(mProgressDialog);
+
+        if (mFlickrService != null) {
+            mFlickrService.getRecentPhotos(FLICKR_API_GET_RECENT_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, FLICKR_API_EXTRAS).cancel();
+            mFlickrService.searchPhotos(FLICKR_API_SEARCH_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, mResultString, FLICKR_API_EXTRAS).cancel();
+        }
     }
 
     private void setupAdapter() {
