@@ -2,7 +2,6 @@ package com.bromancelabs.photogallery.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -55,8 +54,6 @@ public class PhotoGalleryFragment extends Fragment {
 
     @Bind(R.id.rv_photo_gallery) RecyclerView mPhotoRecyclerView;
 
-    private List<Photo> mPhotoList;
-
     private PhotoAdapter mPhotoAdapter;
 
     private FlickrService mFlickrService;
@@ -88,7 +85,7 @@ public class PhotoGalleryFragment extends Fragment {
 
         mPhotoRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), GRID_COLUMNS));
 
-        getActivity().startService(new Intent(getActivity(), PollService.class));
+        getActivity().startService(PollService.newIntent(getActivity()));
     }
 
     @Override
@@ -98,7 +95,7 @@ public class PhotoGalleryFragment extends Fragment {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_network_unavailable);
         } else {
-            getFlickrPhotos();
+            getFlickrPhotos(QueryPreferences.getSearchQuery(getActivity()));
         }
     }
 
@@ -123,7 +120,7 @@ public class PhotoGalleryFragment extends Fragment {
                     QueryPreferences.setSearchQuery(getActivity(), s);
                     hideKeyboard();
                     searchItem.collapseActionView();
-                    getFlickrPhotos();
+                    getFlickrPhotos(QueryPreferences.getSearchQuery(getActivity()));
                 }
                 return true;
             }
@@ -146,7 +143,7 @@ public class PhotoGalleryFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.menu_item_clear:
                 QueryPreferences.setSearchQuery(getActivity(), null);
-                getFlickrPhotos();
+                getFlickrPhotos(QueryPreferences.getSearchQuery(getActivity()));
                 return true;
 
             default:
@@ -154,7 +151,7 @@ public class PhotoGalleryFragment extends Fragment {
         }
     }
 
-    private void getFlickrPhotos() {
+    private void getFlickrPhotos(String searchString) {
         cancelPhotosObjectRequests();
 
         if (mPhotoAdapter != null) {
@@ -164,7 +161,7 @@ public class PhotoGalleryFragment extends Fragment {
         mProgressDialog = DialogUtils.showProgressDialog(getActivity());
         mFlickrService = RetrofitSingleton.getInstance(URL).create(FlickrService.class);
 
-        final String searchString = QueryPreferences.getSearchQuery(getActivity());
+        searchString = QueryPreferences.getSearchQuery(getActivity());
 
         if (TextUtils.isEmpty(searchString)) {
             mFlickrService.getRecentPhotos(FLICKR_API_GET_RECENT_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, FLICKR_API_EXTRAS).enqueue(mPhotosObjectCallback);
@@ -179,8 +176,7 @@ public class PhotoGalleryFragment extends Fragment {
             if (response.isSuccess()) {
                 final long responseSize = Long.parseLong(response.body().getPhotos().getTotal());
                 Log.d(TAG, "JSON response # of photos: " + responseSize);
-                mPhotoList = response.body().getPhotos().getPhoto();
-                setupAdapter();
+                setupAdapter(response.body().getPhotos().getPhoto());
 
             } else {
                 Log.e(TAG, "Error: " + response.message());
@@ -206,9 +202,9 @@ public class PhotoGalleryFragment extends Fragment {
         }
     }
 
-    private void setupAdapter() {
-        if (isAdded() && !mPhotoList.isEmpty()) {
-            mPhotoAdapter = new PhotoAdapter(mPhotoList);
+    public void setupAdapter(List<Photo> photoList) {
+        if (isAdded() && !photoList.isEmpty()) {
+            mPhotoAdapter = new PhotoAdapter(photoList);
             mPhotoRecyclerView.setAdapter(mPhotoAdapter);
         } else {
             showErrorSnackBar();
