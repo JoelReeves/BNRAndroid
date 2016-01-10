@@ -8,6 +8,7 @@ public final class QueryPreferences {
     private static final String PREF_NAME = "query_preferences";
     private static final String SEARCH_QUERY = "search_query";
     private static final String LAST_RESULT_ID = "lastResultId";
+    private static final String IS_ALARM_ON = "is_alarm_on";
 
     private QueryPreferences() {}
 
@@ -33,5 +34,13 @@ public final class QueryPreferences {
 
     public static void setLastResultId(Context context, String id) {
         getEditor(context).putString(LAST_RESULT_ID, id).apply();
+    }
+
+    public static boolean isAlarmOn(Context context) {
+        return getPreferences(context).getBoolean(IS_ALARM_ON, false);
+    }
+
+    public static void setAlarmOn(Context context, boolean isOn) {
+        getEditor(context).putBoolean(IS_ALARM_ON, isOn);
     }
 }
