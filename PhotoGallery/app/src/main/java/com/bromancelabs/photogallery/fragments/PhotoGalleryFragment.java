@@ -265,7 +265,7 @@ public class PhotoGalleryFragment extends VisibleFragment {
         } else {
             Log.i(TAG, "Got a new result: " + resultId);
             displayNotification();
-            getActivity().sendBroadcast(new Intent(PollService.ACTION_SHOW_NOTIFICATION));
+            getActivity().sendBroadcast(new Intent(PollService.ACTION_SHOW_NOTIFICATION), PollService.PRIVATE_PERMISSION);
         }
 
         QueryPreferences.setLastResultId(getActivity(), resultId);
