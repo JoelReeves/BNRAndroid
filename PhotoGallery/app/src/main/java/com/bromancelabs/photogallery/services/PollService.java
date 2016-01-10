@@ -8,12 +8,13 @@ import android.content.Intent;
 import android.os.SystemClock;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.bromancelabs.photogallery.BuildConfig;
 import com.bromancelabs.photogallery.fragments.PhotoGalleryFragment;
 import com.bromancelabs.photogallery.utils.NetworkUtils;
 
 public class PollService extends IntentService {
     private static final String TAG = PollService.class.getSimpleName();
-    private static final long POLL_INTERVAL = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
+    private static final long POLL_INTERVAL = BuildConfig.DEBUG ? 15000 : AlarmManager.INTERVAL_FIFTEEN_MINUTES;
     public static final String ACTION_SHOW_NOTIFICATION = "com.bromancelabs.photogallery.services.SHOW_NOTIFICATION";
 
     public static Intent newIntent(Context context) {

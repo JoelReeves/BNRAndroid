@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -49,7 +48,7 @@ import butterknife.ButterKnife;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PhotoGalleryFragment extends Fragment {
+public class PhotoGalleryFragment extends VisibleFragment {
     private static final int GRID_COLUMNS = 3;
     private static final int IMAGEVIEW_WIDTH = 150;
     private static final int IMAGEVIEW_HEIGHT= 150;
