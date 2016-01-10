@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -264,18 +263,18 @@ public class PhotoGalleryFragment extends VisibleFragment {
             Log.i(TAG, "Got an old result: " + resultId);
         } else {
             Log.i(TAG, "Got a new result: " + resultId);
-            displayNotification();
+            showBackgroundNotification(0, createNotification());
             getActivity().sendBroadcast(new Intent(PollService.ACTION_SHOW_NOTIFICATION), PollService.PRIVATE_PERMISSION);
         }
 
         QueryPreferences.setLastResultId(getActivity(), resultId);
     }
 
-    private void displayNotification() {
+    private Notification createNotification() {
         Intent intent = PhotoGalleryActivity.newIntent(getActivity());
         PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, intent, 0);
 
-        Notification notification = new NotificationCompat.Builder(getActivity())
+        return new NotificationCompat.Builder(getActivity())
                 .setTicker(getActivity().getResources().getString(R.string.new_pictures_title))
                 .setSmallIcon(android.R.drawable.ic_menu_report_image)
                 .setContentTitle(getActivity().getResources().getString(R.string.new_pictures_title))
@@ -283,9 +282,13 @@ public class PhotoGalleryFragment extends VisibleFragment {
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .build();
+    }
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
-        notificationManager.notify(0, notification);
+    private void showBackgroundNotification(int requestCode, Notification notification) {
+        Intent intent = new Intent(PollService.ACTION_SHOW_NOTIFICATION);
+        intent.putExtra(PollService.REQUEST_CODE, requestCode);
+        intent.putExtra(PollService.NOTIFICATION, notification);
+        getActivity().sendOrderedBroadcast(intent, PollService.PRIVATE_PERMISSION, null, null, Activity.RESULT_OK, null, null);
     }
 
     private void dismissDialog(Dialog dialog) {

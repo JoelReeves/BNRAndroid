@@ -17,6 +17,8 @@ public class PollService extends IntentService {
     private static final long POLL_INTERVAL = BuildConfig.DEBUG ? 15000 : AlarmManager.INTERVAL_FIFTEEN_MINUTES;
     public static final String ACTION_SHOW_NOTIFICATION = "com.bromancelabs.photogallery.services.SHOW_NOTIFICATION";
     public static final String PRIVATE_PERMISSION = "com.bromancelabs.photogallery.PRIVATE";
+    public static final String REQUEST_CODE = "request_code";
+    public static final String NOTIFICATION = "notification";
 
     public static Intent newIntent(Context context) {
         return new Intent(context, PollService.class);
