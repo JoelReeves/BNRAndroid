@@ -11,5 +11,8 @@ public class StartupReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG, "Received broadcast intent: " + intent.getAction());
+
+        boolean isOn = QueryPreferences.isAlarmOn(context);
+        PollService.setServiceAlarm(context, isOn);
     }
 }
