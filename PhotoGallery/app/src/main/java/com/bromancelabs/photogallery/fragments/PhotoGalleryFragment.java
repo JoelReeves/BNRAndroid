@@ -63,6 +63,7 @@ public class PhotoGalleryFragment extends Fragment {
     private static final String FLICKR_API_EXTRAS = "url_s";
     public static final String POLL_INTENT = "poll_intent";
     public static final String POLL_KEY_ID = "id";
+    private static final String ACTION_SHOW_NOTIFICATION = "com.bromancelabs.photogallery.services.SHOW_NOTIFICATION";
 
     @Bind(R.id.rv_photo_gallery) RecyclerView mPhotoRecyclerView;
 
@@ -109,7 +110,8 @@ public class PhotoGalleryFragment extends Fragment {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_network_unavailable);
         } else {
-            PollService.setServiceAlarm(getActivity(), false);
+            boolean isOn = QueryPreferences.isAlarmOn(getActivity());
+            PollService.setServiceAlarm(getActivity(), isOn);
         }
     }
 
@@ -265,6 +267,7 @@ public class PhotoGalleryFragment extends Fragment {
         } else {
             Log.i(TAG, "Got a new result: " + resultId);
             displayNotification();
+            getActivity().sendBroadcast(new Intent(ACTION_SHOW_NOTIFICATION));
         }
 
         QueryPreferences.setLastResultId(getActivity(), resultId);
