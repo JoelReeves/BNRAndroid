@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -101,15 +100,7 @@ public class PhotoGalleryFragment extends VisibleFragment {
     @Override
     public void onResume() {
         super.onResume();
-
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver, new IntentFilter(POLL_INTENT));
-
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_network_unavailable);
-        } else {
-            boolean isOn = QueryPreferences.isAlarmOn(getActivity());
-            PollService.setServiceAlarm(getActivity(), isOn);
-        }
     }
 
     @Override
@@ -191,8 +182,12 @@ public class PhotoGalleryFragment extends VisibleFragment {
     };
 
     private void startPolling() {
-        boolean shouldStartAlarm = !PollService.isServiceAlarmOn(getActivity());
-        PollService.setServiceAlarm(getActivity(), shouldStartAlarm);
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_network_unavailable);
+        } else {
+            boolean shouldStartAlarm = !PollService.isServiceAlarmOn(getActivity());
+            PollService.setServiceAlarm(getActivity(), shouldStartAlarm);
+        }
     }
 
     private void getFlickrPhotos() {
@@ -352,7 +347,7 @@ public class PhotoGalleryFragment extends VisibleFragment {
 
         public void bindPhoto(Photo photo) {
             Picasso.with(getActivity())
-                    .load(Uri.parse(photo.getUrl()))
+                    .load(photo.getPhotoUri())
                     .placeholder(R.drawable.ic_placeholder_image)
                     .error(R.drawable.ic_error_image)
                     .resize(IMAGEVIEW_WIDTH, IMAGEVIEW_HEIGHT)

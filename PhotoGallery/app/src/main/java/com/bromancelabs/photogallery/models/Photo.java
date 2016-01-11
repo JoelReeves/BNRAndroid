@@ -1,9 +1,13 @@
 package com.bromancelabs.photogallery.models;
 
+import android.net.Uri;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Photo {
+    private static final String PHOTO_URL = "http://www.flickr.com/photos/";
+
     @SerializedName("id")
     @Expose
     private String id;
@@ -122,6 +126,14 @@ public class Photo {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Uri getPhotoUri() {
+        return Uri.parse(url);
+    }
+
+    public Uri getPhotoPageUri() {
+        return Uri.parse(PHOTO_URL + owner + id);
     }
 
     @Override
