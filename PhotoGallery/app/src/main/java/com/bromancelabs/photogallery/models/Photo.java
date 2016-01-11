@@ -133,7 +133,7 @@ public class Photo {
     }
 
     public Uri getPhotoPageUri() {
-        return Uri.parse(PHOTO_URL + owner + id);
+        return Uri.parse(PHOTO_URL + owner + "/" + id);
     }
 
     @Override

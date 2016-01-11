@@ -43,6 +43,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -339,6 +340,7 @@ public class PhotoGalleryFragment extends VisibleFragment {
 
     public class PhotoHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.iv_fragment_photo_gallery) ImageView mPhotoImageView;
+        private Photo mPhoto;
 
         public PhotoHolder(View itemView) {
             super(itemView);
@@ -346,6 +348,8 @@ public class PhotoGalleryFragment extends VisibleFragment {
         }
 
         public void bindPhoto(Photo photo) {
+            mPhoto = photo;
+
             Picasso.with(getActivity())
                     .load(photo.getPhotoUri())
                     .placeholder(R.drawable.ic_placeholder_image)
@@ -353,6 +357,11 @@ public class PhotoGalleryFragment extends VisibleFragment {
                     .resize(IMAGEVIEW_WIDTH, IMAGEVIEW_HEIGHT)
                     .centerCrop()
                     .into(mPhotoImageView);
+        }
+
+        @OnClick(R.id.iv_fragment_photo_gallery)
+        public void flickrPhotoClicked() {
+            startActivity(new Intent(Intent.ACTION_VIEW, mPhoto.getPhotoPageUri()));
         }
     }
 }
