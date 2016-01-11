@@ -102,6 +102,7 @@ public class PhotoGalleryFragment extends VisibleFragment {
     @Override
     public void onResume() {
         super.onResume();
+        PollService.setServiceAlarm(getActivity(), false);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver, new IntentFilter(POLL_INTENT));
     }
 
