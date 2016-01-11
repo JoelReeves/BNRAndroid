@@ -3,10 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/MatchParent">
 
+    <ProgressBar
+        android:id="@+id/pb_fragment_photo_page"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:visibility="gone"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:background="?attr/colorPrimary"/>
+
     <WebView
         android:id="@+id/wv_fragment_photo_page"
-        style="@style/MatchWidthWrapHeight"
+        style="@style/MatchParent"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"/>
+        android:layout_below="@id/pb_fragment_photo_page"/>
 
 </RelativeLayout>

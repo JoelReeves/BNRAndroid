@@ -1,5 +1,6 @@
 package com.bromancelabs.photogallery.fragments;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -44,6 +45,7 @@ public class PhotoPageFragment extends VisibleFragment {
         return rootView;
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
