@@ -1,6 +1,7 @@
 package com.bromancelabs.photogallery.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -82,6 +83,10 @@ public class PhotoPageFragment extends VisibleFragment {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url.startsWith("http")) {
+                    loadURL(url);
+                    return true;
+                }
                 return false;
             }
         });
@@ -94,5 +99,9 @@ public class PhotoPageFragment extends VisibleFragment {
 
     public void webViewGoBack() {
         mWebView.goBack();
+    }
+
+    private void loadURL(String url) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
 }
