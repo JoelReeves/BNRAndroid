@@ -87,4 +87,12 @@ public class PhotoPageFragment extends VisibleFragment {
         });
         mWebView.loadUrl(mUri.toString());
     }
+
+    public boolean canWebViewGoBack() {
+        return mWebView.canGoBack();
+    }
+
+    public void webViewGoBack() {
+        mWebView.goBack();
+    }
 }
