@@ -28,6 +28,7 @@ import android.widget.ImageView;
 
 import com.bromancelabs.photogallery.R;
 import com.bromancelabs.photogallery.activities.PhotoGalleryActivity;
+import com.bromancelabs.photogallery.activities.PhotoPageActivity;
 import com.bromancelabs.photogallery.models.Photo;
 import com.bromancelabs.photogallery.models.PhotosObject;
 import com.bromancelabs.photogallery.services.FlickrService;
@@ -361,7 +362,7 @@ public class PhotoGalleryFragment extends VisibleFragment {
 
         @OnClick(R.id.iv_fragment_photo_gallery)
         public void flickrPhotoClicked() {
-            startActivity(new Intent(Intent.ACTION_VIEW, mPhoto.getPhotoPageUri()));
+            startActivity(PhotoPageActivity.newIntent(getActivity(), mPhoto.getPhotoPageUri()));
         }
     }
 }
