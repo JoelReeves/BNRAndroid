@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchParent">
+
+    <WebView
+        android:id="@+id/wv_fragment_photo_page"
+        style="@style/MatchWidthWrapHeight"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"/>
+
+</RelativeLayout>
