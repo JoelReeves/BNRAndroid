@@ -1,8 +1,8 @@
-package com.tonicdesign.draganddraw.activities;
+package com.bromancelabs.draganddraw.activities;
 
 import android.support.v4.app.Fragment;
 
-import com.tonicdesign.draganddraw.fragments.DragAndDrawFragment;
+import com.bromancelabs.draganddraw.fragments.DragAndDrawFragment;
 
 public class DragAndDrawActivity extends SingleFragmentActivity {
 

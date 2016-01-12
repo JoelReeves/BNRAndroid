@@ -1,4 +1,4 @@
-package com.tonicdesign.draganddraw.fragments;
+package com.bromancelabs.draganddraw.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tonicdesign.draganddraw.R;
+import com.bromancelabs.draganddraw.R;
 
 import butterknife.ButterKnife;
 

@@ -1,4 +1,4 @@
-package com.tonicdesign.draganddraw;
+package com.bromancelabs.draganddraw;
 
 import org.junit.Test;
 

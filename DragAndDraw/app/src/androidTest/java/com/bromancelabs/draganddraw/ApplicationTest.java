@@ -1,4 +1,4 @@
-package com.tonicdesign.draganddraw;
+package com.bromancelabs.draganddraw;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
