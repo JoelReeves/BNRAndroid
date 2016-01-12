@@ -117,6 +117,6 @@ public class QuizActivity extends AppCompatActivity {
             snackBarBackgroundColor = R.color.red;
         }
 
-        SnackBarUtils.showSnackBar(this, messageResId, R.color.white, snackBarBackgroundColor);
+        SnackBarUtils.showStyledBar(this, messageResId, R.color.white, snackBarBackgroundColor);
     }
 }
