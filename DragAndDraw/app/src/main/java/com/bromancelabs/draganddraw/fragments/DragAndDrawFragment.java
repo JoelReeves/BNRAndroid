@@ -24,9 +24,4 @@ public class DragAndDrawFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         return rootView;
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
 }

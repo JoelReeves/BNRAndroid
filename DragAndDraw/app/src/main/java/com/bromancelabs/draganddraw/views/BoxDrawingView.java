@@ -77,7 +77,7 @@ public class BoxDrawingView extends View {
     protected void onDraw(Canvas canvas) {
         // Fill the background
         canvas.drawPaint(mBackgroundPaint);
-        
+
         for (Box box : mBoxen) {
             float left = Math.min(box.getOrigin().x, box.getCurrent().x);
             float right = Math.max(box.getOrigin().x, box.getCurrent().x);
