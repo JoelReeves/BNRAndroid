@@ -1,6 +1,8 @@
 package com.bromancelabs.draganddraw.views;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.PointF;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -17,6 +19,8 @@ public class BoxDrawingView extends View {
 
     private Box mCurrentBox;
     private List<Box> mBoxen = new ArrayList<>();
+    private Paint mBoxPaint;
+    private Paint mBackgroundPaint;
 
     // Used when creating the view in code
     public BoxDrawingView(Context context) {
@@ -26,6 +30,14 @@ public class BoxDrawingView extends View {
     // Used when inflating the view from XML
     public BoxDrawingView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        // Paint the boxes a nice semitransparent red (ARGB)
+        mBoxPaint = new Paint();
+        mBoxPaint.setColor(0x22ff0000);
+        
+        // Paint the background off-white
+        mBackgroundPaint = new Paint();
+        mBackgroundPaint.setColor(0xfff8efe0);
     }
 
     @Override
@@ -59,5 +71,10 @@ public class BoxDrawingView extends View {
 
         Log.d(TAG, action + " at x=" + current.x + ", y=" + current.y);
         return true;
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
     }
 }
