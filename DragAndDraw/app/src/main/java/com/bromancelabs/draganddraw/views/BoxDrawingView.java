@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -16,11 +18,14 @@ import java.util.List;
 
 public class BoxDrawingView extends View {
     private static final String TAG = BoxDrawingView.class.getSimpleName();
+    private static final String PARCELABLE_KEY = "parcelable_key";
+    private static final String BOX_KEY = "box_key_";
 
     private Box mCurrentBox;
     private List<Box> mBoxen = new ArrayList<>();
     private Paint mBoxPaint;
     private Paint mBackgroundPaint;
+    private float[] mBoxPointsArray;
 
     // Used when creating the view in code
     public BoxDrawingView(Context context) {
@@ -38,6 +43,56 @@ public class BoxDrawingView extends View {
         // Paint the background off-white
         mBackgroundPaint = new Paint();
         mBackgroundPaint.setColor(0xfff8efe0);
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(PARCELABLE_KEY, super.onSaveInstanceState());
+
+        int boxCount = 1;
+
+        for(Box box : mBoxen) {
+            mBoxPointsArray = new float[]{box.getOrigin().x, box.getOrigin().y, box.getCurrent().x, box.getCurrent().y};
+            bundle.putFloatArray(BOX_KEY + boxCount, mBoxPointsArray);
+            boxCount ++;
+        }
+
+        return bundle;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            super.onRestoreInstanceState(bundle.getParcelable(PARCELABLE_KEY));
+
+            // Keeping a count of the boxes drawn. Used as part of the bundle key
+            int boxCount = 1;
+
+            // Staying in the loop if the bundle contains the key we're looking for
+            while (bundle.containsKey(BOX_KEY + boxCount)) {
+                // Getting the x and y values from the bundle.
+                mBoxPointsArray = bundle.getFloatArray(BOX_KEY + boxCount);
+
+                // Creating the boxes from the saved array and drawing them back onto the screen
+                PointF origin;
+                PointF current;
+
+                if (mBoxPointsArray != null) {
+                    origin = new PointF(mBoxPointsArray[0], mBoxPointsArray[1]);
+                    current = new PointF(mBoxPointsArray[2], mBoxPointsArray[3]);
+
+                    Box box = new Box(origin);
+                    box.setCurrent(current);
+
+                    mBoxen.add(box);
+                    boxCount++;
+                }
+            }
+        } else {
+            super.onRestoreInstanceState(state);
+        }
     }
 
     @Override
