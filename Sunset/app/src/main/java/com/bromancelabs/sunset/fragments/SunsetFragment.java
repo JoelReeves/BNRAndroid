@@ -12,6 +12,7 @@ import android.view.animation.AccelerateInterpolator;
 import com.bromancelabs.sunset.R;
 
 import butterknife.Bind;
+import butterknife.BindColor;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -20,6 +21,9 @@ public class SunsetFragment extends Fragment {
 
     @Bind(R.id.iv_sun) View mSunView;
     @Bind(R.id.fl_sky) View mSkyView;
+    @BindColor(R.color.blue_sky) int mBlueSkyColor;
+    @BindColor(R.color.sunset_sky) int mSunsetSkyColor;
+    @BindColor(R.color.night_sky) int mNightSkyColor;
 
     public static SunsetFragment newInstance() {
         return new SunsetFragment();
