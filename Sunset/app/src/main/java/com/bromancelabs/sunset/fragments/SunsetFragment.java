@@ -19,6 +19,7 @@ import butterknife.OnClick;
 
 public class SunsetFragment extends Fragment {
     private static final long ANIMATION_DURATION = 3000;
+    private static final long NIGHT_ANIMATION_DURATION = 1500;
 
     @Bind(R.id.iv_sun) View mSunView;
     @Bind(R.id.fl_sky) View mSkyView;
@@ -58,13 +59,15 @@ public class SunsetFragment extends Fragment {
                 .setDuration(ANIMATION_DURATION);
 
         heightAnimator.setInterpolator(new AccelerateInterpolator());
-        heightAnimator.start();
 
         ObjectAnimator sunsetSkyAnimator = ObjectAnimator
                 .ofInt(mSkyView, "backgroundColor", mBlueSkyColor, mSunsetSkyColor)
                 .setDuration(ANIMATION_DURATION);
 
         sunsetSkyAnimator.setEvaluator(new ArgbEvaluator());
-        sunsetSkyAnimator.start();
+
+        ObjectAnimator nightSkyAnimator = ObjectAnimator
+                .ofInt(mSkyView, "backgroundColor", mSunsetSkyColor, mNightSkyColor)
+                .setDuration(NIGHT_ANIMATION_DURATION);
     }
 }
