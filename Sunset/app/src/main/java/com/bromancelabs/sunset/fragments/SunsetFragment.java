@@ -1,5 +1,6 @@
 package com.bromancelabs.sunset.fragments;
 
+import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
@@ -69,5 +70,12 @@ public class SunsetFragment extends Fragment {
         ObjectAnimator nightSkyAnimator = ObjectAnimator
                 .ofInt(mSkyView, "backgroundColor", mSunsetSkyColor, mNightSkyColor)
                 .setDuration(NIGHT_ANIMATION_DURATION);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet
+                .play(heightAnimator)
+                .with(sunsetSkyAnimator)
+                .before(nightSkyAnimator);
+        animatorSet.start();
     }
 }
