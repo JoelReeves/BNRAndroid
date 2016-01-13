@@ -22,6 +22,7 @@ import butterknife.OnClick;
 public class SunsetFragment extends Fragment {
     private static final long ANIMATION_DURATION = 3000;
     private static final long TRANSITION_ANIMATION_DURATION = 1500;
+    private static final int SCALE_ANIMATION_DURATION = 1000;
 
     @Bind(R.id.iv_sun) View mSunView;
     @Bind(R.id.fl_sky) View mSkyView;
@@ -108,6 +109,28 @@ public class SunsetFragment extends Fragment {
                 .with(createBackgroundColorAnimator(mSkyView, mNightSkyColor, mSunsetSkyColor, ANIMATION_DURATION))
                 .before(createBackgroundColorAnimator(mSkyView, mSunsetSkyColor, mBlueSkyColor, TRANSITION_ANIMATION_DURATION));
         mAnimatorSet.start();
+
+        mAnimatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                scaleSun();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
     }
 
     private ObjectAnimator createHeightAnimator(View view, float start, float end, long duration) {
@@ -126,6 +149,18 @@ public class SunsetFragment extends Fragment {
 
         objectAnimator.setEvaluator(new ArgbEvaluator());
         return objectAnimator;
+    }
+
+    private void scaleSun() {
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mSunView, "scaleX", 2.0f);
+        scaleX.setDuration(SCALE_ANIMATION_DURATION);
+
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mSunView, "scaleY", 2.0f);
+        scaleY.setDuration(SCALE_ANIMATION_DURATION);
+
+        AnimatorSet scaleUp = new AnimatorSet();
+        scaleUp.play(scaleX).with(scaleY);
+        scaleUp.start();
     }
 
     private void cancelAnimationSet() {
