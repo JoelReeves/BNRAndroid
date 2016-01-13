@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 
 import com.bromancelabs.sunset.R;
 
@@ -51,6 +52,7 @@ public class SunsetFragment extends Fragment {
                 .ofFloat(mSunView, "y", sunYStart, sunYEnd)
                 .setDuration(ANIMATION_DURATION);
 
+        heightAnimator.setInterpolator(new AccelerateInterpolator());
         heightAnimator.start();
     }
 }
