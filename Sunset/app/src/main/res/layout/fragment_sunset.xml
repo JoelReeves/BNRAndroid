@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchParent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/fl_sky"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.61"
+        android:background="@color/blue_sky">
+        <ImageView
+            android:id="@+id/iv_sun"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/sun"
+            android:contentDescription="@null"/>
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.39"
+        android:background="@color/sea"/>
+
+</LinearLayout>
