@@ -12,6 +12,7 @@ import com.bromancelabs.sunset.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class SunsetFragment extends Fragment {
     private static final long ANIMATION_DURATION = 3000;
@@ -35,6 +36,11 @@ public class SunsetFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    @OnClick(R.id.ll_sunset)
+    public void viewClicked() {
+        startAnimation();
     }
 
     private void startAnimation() {
