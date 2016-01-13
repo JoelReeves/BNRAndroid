@@ -1,5 +1,6 @@
 package com.bromancelabs.sunset.fragments;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
@@ -20,13 +21,17 @@ import butterknife.OnClick;
 
 public class SunsetFragment extends Fragment {
     private static final long ANIMATION_DURATION = 3000;
-    private static final long NIGHT_ANIMATION_DURATION = 1500;
+    private static final long TRANSITION_ANIMATION_DURATION = 1500;
 
     @Bind(R.id.iv_sun) View mSunView;
     @Bind(R.id.fl_sky) View mSkyView;
     @BindColor(R.color.blue_sky) int mBlueSkyColor;
     @BindColor(R.color.sunset_sky) int mSunsetSkyColor;
     @BindColor(R.color.night_sky) int mNightSkyColor;
+
+    private AnimatorSet mAnimatorSet;
+
+    private boolean isSunRise = false;
 
     public static SunsetFragment newInstance() {
         return new SunsetFragment();
@@ -48,19 +53,61 @@ public class SunsetFragment extends Fragment {
 
     @OnClick(R.id.ll_sunset)
     public void viewClicked() {
-        startAnimation();
+        if (!isSunRise) {
+            startSunSetAnimation();
+        } else {
+            startSunRiseAnimation();
+        }
     }
 
-    private void startAnimation() {
+    private void startSunSetAnimation() {
+        cancelAnimationSet();
+
         float sunYStart = mSunView.getTop();
         float sunYEnd = mSkyView.getHeight();
 
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet
+        mAnimatorSet = new AnimatorSet();
+        mAnimatorSet
                 .play(createHeightAnimator(mSunView, sunYStart, sunYEnd, ANIMATION_DURATION))
                 .with(createBackgroundColorAnimator(mSkyView, mBlueSkyColor, mSunsetSkyColor, ANIMATION_DURATION))
-                .before(createBackgroundColorAnimator(mSkyView, mSunsetSkyColor, mNightSkyColor, NIGHT_ANIMATION_DURATION));
-        animatorSet.start();
+                .before(createBackgroundColorAnimator(mSkyView, mSunsetSkyColor, mNightSkyColor, TRANSITION_ANIMATION_DURATION));
+        mAnimatorSet.start();
+
+        mAnimatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                isSunRise = true;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+    }
+
+    private void startSunRiseAnimation() {
+        cancelAnimationSet();
+
+        float sunYStart = mSkyView.getBottom();
+        float startYEnd = mSunView.getHeight();
+
+        mAnimatorSet = new AnimatorSet();
+        mAnimatorSet
+                .play(createHeightAnimator(mSunView, sunYStart, startYEnd, ANIMATION_DURATION))
+                .with(createBackgroundColorAnimator(mSkyView, mNightSkyColor, mSunsetSkyColor, ANIMATION_DURATION))
+                .before(createBackgroundColorAnimator(mSkyView, mSunsetSkyColor, mBlueSkyColor, TRANSITION_ANIMATION_DURATION));
+        mAnimatorSet.start();
     }
 
     private ObjectAnimator createHeightAnimator(View view, float start, float end, long duration) {
@@ -79,5 +126,11 @@ public class SunsetFragment extends Fragment {
 
         objectAnimator.setEvaluator(new ArgbEvaluator());
         return objectAnimator;
+    }
+
+    private void cancelAnimationSet() {
+        if (mAnimatorSet != null) {
+            mAnimatorSet.cancel();
+        }
     }
 }
