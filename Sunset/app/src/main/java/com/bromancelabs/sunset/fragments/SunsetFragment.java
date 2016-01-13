@@ -55,27 +55,29 @@ public class SunsetFragment extends Fragment {
         float sunYStart = mSunView.getTop();
         float sunYEnd = mSkyView.getHeight();
 
-        ObjectAnimator heightAnimator = ObjectAnimator
-                .ofFloat(mSunView, "y", sunYStart, sunYEnd)
-                .setDuration(ANIMATION_DURATION);
-
-        heightAnimator.setInterpolator(new AccelerateInterpolator());
-
-        ObjectAnimator sunsetSkyAnimator = ObjectAnimator
-                .ofInt(mSkyView, "backgroundColor", mBlueSkyColor, mSunsetSkyColor)
-                .setDuration(ANIMATION_DURATION);
-
-        sunsetSkyAnimator.setEvaluator(new ArgbEvaluator());
-
-        ObjectAnimator nightSkyAnimator = ObjectAnimator
-                .ofInt(mSkyView, "backgroundColor", mSunsetSkyColor, mNightSkyColor)
-                .setDuration(NIGHT_ANIMATION_DURATION);
-
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet
-                .play(heightAnimator)
-                .with(sunsetSkyAnimator)
-                .before(nightSkyAnimator);
+                .play(createHeightAnimator(mSunView, sunYStart, sunYEnd, ANIMATION_DURATION))
+                .with(createBackgroundColorAnimator(mSkyView, mBlueSkyColor, mSunsetSkyColor, ANIMATION_DURATION))
+                .before(createBackgroundColorAnimator(mSkyView, mSunsetSkyColor, mNightSkyColor, NIGHT_ANIMATION_DURATION));
         animatorSet.start();
+    }
+
+    private ObjectAnimator createHeightAnimator(View view, float start, float end, long duration) {
+        ObjectAnimator heightAnimator = ObjectAnimator
+                .ofFloat(view, "y", start, end)
+                .setDuration(duration);
+
+        heightAnimator.setInterpolator(new AccelerateInterpolator());
+        return heightAnimator;
+    }
+
+    private ObjectAnimator createBackgroundColorAnimator(View view, int firstColor, int secondColor, long duration) {
+        ObjectAnimator objectAnimator = ObjectAnimator
+                .ofInt(view, "backgroundColor", firstColor, secondColor)
+                .setDuration(duration);
+
+        objectAnimator.setEvaluator(new ArgbEvaluator());
+        return objectAnimator;
     }
 }
