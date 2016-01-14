@@ -11,12 +11,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bromancelabs.locatr.R;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class LocatrFragment extends Fragment {
     @Bind(R.id.iv_image) ImageView mImageView;
+
+    private GoogleApiClient mGoogleClient;
 
     public static LocatrFragment newInstance() {
         return new LocatrFragment();
@@ -26,6 +30,8 @@ public class LocatrFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        buildGoogleApiClient();
     }
 
     @Nullable
@@ -42,6 +48,18 @@ public class LocatrFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleClient.connect();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mGoogleClient.disconnect();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
@@ -51,5 +69,11 @@ public class LocatrFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_locatr, menu);
+    }
+
+    private void buildGoogleApiClient() {
+        mGoogleClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(LocationServices.API)
+                .build();
     }
 }
