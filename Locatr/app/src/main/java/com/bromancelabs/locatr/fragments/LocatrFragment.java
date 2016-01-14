@@ -18,6 +18,13 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class LocatrFragment extends Fragment {
+    private static final String URL = "https://api.flickr.com/services/rest/";
+    private static final String FLICKR_API_KEY = "b71c3d2d57d035bf593c78dcb4b659d1";
+    private static final String FLICKR_API_SEARCH_PHOTOS = "flickr.photos.search";
+    private static final String FLICKR_API_FORMAT = "json";
+    private static final String FLICKR_API_JSON_CALLBACK = "1";
+    private static final String FLICKR_API_EXTRAS = "url_s";
+
     @Bind(R.id.iv_image) ImageView mImageView;
 
     private GoogleApiClient mGoogleClient;
