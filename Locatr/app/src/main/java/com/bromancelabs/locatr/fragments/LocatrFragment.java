@@ -51,6 +51,7 @@ public class LocatrFragment extends Fragment {
     public void onStart() {
         super.onStart();
         mGoogleClient.connect();
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -69,6 +70,8 @@ public class LocatrFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_locatr, menu);
+
+        menu.findItem(R.id.action_locate).setEnabled(mGoogleClient.isConnected());
     }
 
     private void buildGoogleApiClient() {
