@@ -2,6 +2,7 @@ package com.bromancelabs.locatr.fragments;
 
 import android.app.Dialog;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +24,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import java.util.List;
@@ -46,6 +49,14 @@ public class LocatrFragment extends SupportMapFragment {
     private static final int IMAGEVIEW_HEIGHT = 150;
 
     private GoogleApiClient mGoogleClient;
+
+    private GoogleMap mGoogleMap;
+
+    private Bitmap mMapBitmap;
+
+    private Photo mPhoto;
+
+    private Location mCurrentLocation;
 
     public static LocatrFragment newInstance() {
         return new LocatrFragment();
@@ -115,8 +126,9 @@ public class LocatrFragment extends SupportMapFragment {
                 LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleClient, locationRequest, new LocationListener() {
                     @Override
                     public void onLocationChanged(Location location) {
-                        Log.i(TAG, "Latitude: " + location.getLatitude() + ", Longitude: " + location.getLongitude());
-                        getFlickrPhotos(location);
+                        mCurrentLocation = location;
+                        Log.i(TAG, "Latitude: " + mCurrentLocation.getLatitude() + ", Longitude: " + mCurrentLocation.getLongitude());
+                        getFlickrPhotos(mCurrentLocation);
                     }
                 });
             }
@@ -190,5 +202,12 @@ public class LocatrFragment extends SupportMapFragment {
                     }
                 })
                 .build();
+
+        getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                mGoogleMap = googleMap;
+            }
+        });
     }
 }
