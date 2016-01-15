@@ -3,19 +3,13 @@ package com.bromancelabs.locatr.fragments;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.bromancelabs.locatr.R;
 import com.bromancelabs.locatr.models.Photo;
@@ -29,11 +23,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.squareup.picasso.Picasso;
+import com.google.android.gms.maps.SupportMapFragment;
 
 import java.util.List;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,7 +34,7 @@ import retrofit2.Response;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class LocatrFragment extends Fragment {
+public class LocatrFragment extends SupportMapFragment {
     private static final String TAG = LocatrFragment.class.getSimpleName();
     private static final String URL = "https://api.flickr.com/services/rest/";
     private static final String FLICKR_API_KEY = "b71c3d2d57d035bf593c78dcb4b659d1";
@@ -49,10 +42,6 @@ public class LocatrFragment extends Fragment {
     private static final String FLICKR_API_FORMAT = "json";
     private static final String FLICKR_API_JSON_CALLBACK = "1";
     private static final String FLICKR_API_EXTRAS = "url_s";
-    private static final int IMAGEVIEW_WIDTH = 150;
-    private static final int IMAGEVIEW_HEIGHT= 150;
-
-    @Bind(R.id.iv_image) ImageView mImageView;
 
     private GoogleApiClient mGoogleClient;
 
@@ -66,14 +55,6 @@ public class LocatrFragment extends Fragment {
         setHasOptionsMenu(true);
 
         buildGoogleApiClient();
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_locatr, container, false);
-        ButterKnife.bind(this, rootView);
-        return rootView;
     }
 
     @Override
@@ -172,11 +153,11 @@ public class LocatrFragment extends Fragment {
         if (photoList.isEmpty() || photoList.get(0).getUrl() == null) {
             showImageError();
         } else {
-            Picasso.with(getActivity())
+            /*Picasso.with(getActivity())
                     .load(Uri.parse(photoList.get(0).getUrl()))
                     .resize(IMAGEVIEW_WIDTH, IMAGEVIEW_HEIGHT)
                     .centerCrop()
-                    .into(mImageView);
+                    .into(mImageView);*/
         }
     }
 
