@@ -3,6 +3,7 @@ package com.bromancelabs.locatr.fragments;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,11 +23,13 @@ import com.bromancelabs.locatr.models.PhotosObject;
 import com.bromancelabs.locatr.services.FlickrService;
 import com.bromancelabs.locatr.services.RetrofitSingleton;
 import com.bromancelabs.locatr.utils.DialogUtils;
+import com.bromancelabs.locatr.utils.NetworkUtils;
 import com.bromancelabs.locatr.utils.SnackBarUtils;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -46,14 +49,12 @@ public class LocatrFragment extends Fragment {
     private static final String FLICKR_API_FORMAT = "json";
     private static final String FLICKR_API_JSON_CALLBACK = "1";
     private static final String FLICKR_API_EXTRAS = "url_s";
+    private static final int IMAGEVIEW_WIDTH = 150;
+    private static final int IMAGEVIEW_HEIGHT= 150;
 
     @Bind(R.id.iv_image) ImageView mImageView;
 
     private GoogleApiClient mGoogleClient;
-
-    private Dialog mProgressDialog;
-
-    private List<Photo> mPhotoList;
 
     public static LocatrFragment newInstance() {
         return new LocatrFragment();
@@ -73,11 +74,6 @@ public class LocatrFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_locatr, container, false);
         ButterKnife.bind(this, rootView);
         return rootView;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -120,50 +116,72 @@ public class LocatrFragment extends Fragment {
     }
 
     private void getLocation() {
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setNumUpdates(1);
-        locationRequest.setInterval(0);
-
-
-        if (ContextCompat.checkSelfPermission(getActivity(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getActivity(), ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_location_permissions_error);
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_network_unavailable);
         } else {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleClient, locationRequest, new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    Log.i(TAG, "Got a fix: " + location);
-                }
-            });
+            LocationRequest locationRequest = LocationRequest.create();
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            locationRequest.setNumUpdates(1);
+            locationRequest.setInterval(0);
+
+
+            if (ContextCompat.checkSelfPermission(getActivity(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(getActivity(), ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_location_permissions_error);
+            } else {
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleClient, locationRequest, new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        Log.i(TAG, "Latitude: " + location.getLatitude() + ", Longitude: " + location.getLongitude());
+                        getFlickrPhotos(location);
+                    }
+                });
+            }
         }
     }
 
     private void getFlickrPhotos(Location location) {
-        mProgressDialog = DialogUtils.showProgressDialog(getActivity());
+        final Dialog progressDialog = DialogUtils.showProgressDialog(getActivity());
         FlickrService flickrService = RetrofitSingleton.getInstance(URL).create(FlickrService.class);
 
-        String searchString = "dogs";
+        String searchString = "dog";
 
         flickrService.searchPhotos(FLICKR_API_SEARCH_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, searchString, location.getLatitude(), location.getLongitude(), FLICKR_API_EXTRAS).enqueue(new Callback<PhotosObject>() {
             @Override
             public void onResponse(Response<PhotosObject> response) {
                 if (response.isSuccess()) {
-                    final long responseSize = Long.parseLong(response.body().getPhotos().getTotal());
-                    Log.d(TAG, "JSON response # of photos: " + responseSize);
-                    mPhotoList = response.body().getPhotos().getPhoto();
+                    List<Photo> photoList = response.body().getPhotos().getPhoto();
+                    setImage(photoList);
                 } else {
                     Log.e(TAG, "Error: " + response.message());
+                    showImageError();
                 }
-                dismissDialog(mProgressDialog);
+                dismissDialog(progressDialog);
             }
 
             @Override
             public void onFailure(Throwable t) {
                 Log.e(TAG, "Error: " + t.toString());
-                dismissDialog(mProgressDialog);
+                dismissDialog(progressDialog);
+                showImageError();
             }
         });
+    }
+
+    private void setImage(List<Photo> photoList) {
+        if (photoList.isEmpty() || photoList.get(0).getUrl() == null) {
+            showImageError();
+        } else {
+            Picasso.with(getActivity())
+                    .load(Uri.parse(photoList.get(0).getUrl()))
+                    .resize(IMAGEVIEW_WIDTH, IMAGEVIEW_HEIGHT)
+                    .centerCrop()
+                    .into(mImageView);
+        }
+    }
+
+    private void showImageError() {
+        SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_image_download_error);
     }
 
     private void dismissDialog(Dialog dialog) {

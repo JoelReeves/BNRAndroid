@@ -8,4 +8,6 @@
     <string name="snackbar_network_unavailable">Please check your network connection.</string>
 
     <string name="snackbar_location_permissions_error">Location permissions required to use app.</string>
+
+    <string name="snackbar_image_download_error">Unable to download image.</string>
 </resources>
