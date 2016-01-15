@@ -44,6 +44,14 @@ public class Photo {
     @Expose
     private String url;
 
+    @SerializedName("latitude")
+    @Expose
+    private double latitude;
+
+    @SerializedName("longitude")
+    @Expose
+    private double longitude;
+
     public String getId() {
         return id;
     }
@@ -122,6 +130,22 @@ public class Photo {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     @Override

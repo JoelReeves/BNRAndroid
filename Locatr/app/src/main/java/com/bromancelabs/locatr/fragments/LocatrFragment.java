@@ -41,7 +41,7 @@ public class LocatrFragment extends SupportMapFragment {
     private static final String FLICKR_API_SEARCH_PHOTOS = "flickr.photos.search";
     private static final String FLICKR_API_FORMAT = "json";
     private static final String FLICKR_API_JSON_CALLBACK = "1";
-    private static final String FLICKR_API_EXTRAS = "url_s";
+    private static final String FLICKR_API_EXTRAS = "url_s,geo";
 
     private GoogleApiClient mGoogleClient;
 
@@ -153,6 +153,8 @@ public class LocatrFragment extends SupportMapFragment {
         if (photoList.isEmpty() || photoList.get(0).getUrl() == null) {
             showImageError();
         } else {
+            Log.d(TAG, "latitude: " + photoList.get(0).getLatitude());
+            Log.d(TAG, "longitude: " + photoList.get(0).getLongitude());
             /*Picasso.with(getActivity())
                     .load(Uri.parse(photoList.get(0).getUrl()))
                     .resize(IMAGEVIEW_WIDTH, IMAGEVIEW_HEIGHT)
