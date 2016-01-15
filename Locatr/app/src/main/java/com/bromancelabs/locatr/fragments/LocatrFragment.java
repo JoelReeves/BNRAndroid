@@ -24,9 +24,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.List;
 
@@ -146,7 +150,7 @@ public class LocatrFragment extends SupportMapFragment {
             public void onResponse(Response<PhotosObject> response) {
                 if (response.isSuccess()) {
                     List<Photo> photoList = response.body().getPhotos().getPhoto();
-                    setImage(photoList);
+                    updateUI(photoList);
                 } else {
                     Log.e(TAG, "Error: " + response.message());
                     showImageError();
@@ -174,6 +178,30 @@ public class LocatrFragment extends SupportMapFragment {
                     .resize(IMAGEVIEW_WIDTH, IMAGEVIEW_HEIGHT)
                     .centerCrop()
                     .into(mImageView);*/
+        }
+    }
+
+    private void updateUI(List<Photo> photoList) {
+        if (photoList.isEmpty() || photoList.get(0).getUrl() == null) {
+            showImageError();
+        } else {
+            Log.d(TAG, "image latitude: " + photoList.get(0).getLatitude());
+            Log.d(TAG, "image longitude: " + photoList.get(0).getLongitude());
+
+            if (mGoogleMap != null) {
+                Photo mapPhoto = photoList.get(0);
+                LatLng itemPoint = new LatLng(mapPhoto.getLatitude(), mapPhoto.getLongitude());
+                LatLng myPoint = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+
+                LatLngBounds bounds = new LatLngBounds.Builder()
+                        .include(itemPoint)
+                        .include(myPoint)
+                        .build();
+
+                int margin = getResources().getDimensionPixelSize(R.dimen.map_inset_margin);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, margin);
+                mGoogleMap.animateCamera(cameraUpdate);
+            }
         }
     }
 
