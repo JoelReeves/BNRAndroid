@@ -3,7 +3,9 @@ package com.bromancelabs.locatr.fragments;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -29,8 +31,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -56,11 +63,9 @@ public class LocatrFragment extends SupportMapFragment {
 
     private GoogleMap mGoogleMap;
 
-    private Bitmap mMapBitmap;
-
-    private Photo mPhoto;
-
     private Location mCurrentLocation;
+
+    private List<Photo> mPhotoList;
 
     public static LocatrFragment newInstance() {
         return new LocatrFragment();
@@ -149,8 +154,8 @@ public class LocatrFragment extends SupportMapFragment {
             @Override
             public void onResponse(Response<PhotosObject> response) {
                 if (response.isSuccess()) {
-                    List<Photo> photoList = response.body().getPhotos().getPhoto();
-                    updateUI(photoList);
+                    mPhotoList = response.body().getPhotos().getPhoto();
+                    updateUI();
                 } else {
                     Log.e(TAG, "Error: " + response.message());
                     showImageError();
@@ -167,43 +172,62 @@ public class LocatrFragment extends SupportMapFragment {
         });
     }
 
-    private void setImage(List<Photo> photoList) {
-        if (photoList.isEmpty() || photoList.get(0).getUrl() == null) {
+    private void updateUI() {
+        if (mPhotoList.isEmpty() || mPhotoList.get(0).getUrl() == null) {
             showImageError();
         } else {
-            Log.d(TAG, "latitude: " + photoList.get(0).getLatitude());
-            Log.d(TAG, "longitude: " + photoList.get(0).getLongitude());
-            /*Picasso.with(getActivity())
-                    .load(Uri.parse(photoList.get(0).getUrl()))
-                    .resize(IMAGEVIEW_WIDTH, IMAGEVIEW_HEIGHT)
-                    .centerCrop()
-                    .into(mImageView);*/
-        }
-    }
-
-    private void updateUI(List<Photo> photoList) {
-        if (photoList.isEmpty() || photoList.get(0).getUrl() == null) {
-            showImageError();
-        } else {
-            Log.d(TAG, "image latitude: " + photoList.get(0).getLatitude());
-            Log.d(TAG, "image longitude: " + photoList.get(0).getLongitude());
+            Log.d(TAG, "image latitude: " + mPhotoList.get(0).getLatitude());
+            Log.d(TAG, "image longitude: " + mPhotoList.get(0).getLongitude());
 
             if (mGoogleMap != null) {
-                Photo mapPhoto = photoList.get(0);
-                LatLng itemPoint = new LatLng(mapPhoto.getLatitude(), mapPhoto.getLongitude());
-                LatLng myPoint = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-
-                LatLngBounds bounds = new LatLngBounds.Builder()
-                        .include(itemPoint)
-                        .include(myPoint)
-                        .build();
-
-                int margin = getResources().getDimensionPixelSize(R.dimen.map_inset_margin);
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, margin);
-                mGoogleMap.animateCamera(cameraUpdate);
+                Picasso.with(getActivity())
+                    .load(Uri.parse(mPhotoList.get(0).getUrl()))
+                    .resize(IMAGEVIEW_WIDTH, IMAGEVIEW_HEIGHT)
+                    .centerCrop()
+                    .into(mBitmapTarget);
             }
         }
     }
+
+    private Target mBitmapTarget = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            Log.d(TAG, "bitmap successfully loaded");
+
+            LatLng itemPoint = new LatLng(mPhotoList.get(0).getLatitude(), mPhotoList.get(0).getLongitude());
+            LatLng myPoint = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+
+            BitmapDescriptor itemBitmap = BitmapDescriptorFactory.fromBitmap(bitmap);
+            MarkerOptions itemMarker = new MarkerOptions()
+                    .position(itemPoint)
+                    .icon(itemBitmap);
+            MarkerOptions myMarker = new MarkerOptions()
+                    .position(myPoint);
+
+            mGoogleMap.clear();
+            mGoogleMap.addMarker(itemMarker);
+            mGoogleMap.addMarker(myMarker);
+
+            LatLngBounds bounds = new LatLngBounds.Builder()
+                    .include(itemPoint)
+                    .include(myPoint)
+                    .build();
+
+            int margin = getResources().getDimensionPixelSize(R.dimen.map_inset_margin);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, margin);
+            mGoogleMap.animateCamera(cameraUpdate);
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+            Log.d(TAG, "bitmap failed to load");
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+        }
+    };
 
     private void showImageError() {
         SnackBarUtils.showPlainSnackBar(getActivity(), R.string.snackbar_image_download_error);
