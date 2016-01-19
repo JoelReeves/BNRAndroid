@@ -67,6 +67,12 @@ public class LocatrFragment extends SupportMapFragment {
 
     private List<Photo> mPhotoList;
 
+    private FlickrService mFlickrService;
+
+    private Dialog mProgressDialog;
+
+    private String mSearchString;
+
     public static LocatrFragment newInstance() {
         return new LocatrFragment();
     }
@@ -145,12 +151,14 @@ public class LocatrFragment extends SupportMapFragment {
     }
 
     private void getFlickrPhotos(Location location) {
-        final Dialog progressDialog = DialogUtils.showProgressDialog(getActivity());
-        FlickrService flickrService = RetrofitSingleton.getInstance(URL).create(FlickrService.class);
+        cancelPhotosObjectRequests();
 
-        String searchString = "dog";
+        mProgressDialog = DialogUtils.showProgressDialog(getActivity());
+        mFlickrService = RetrofitSingleton.getInstance(URL).create(FlickrService.class);
 
-        flickrService.searchPhotos(FLICKR_API_SEARCH_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, searchString, location.getLatitude(), location.getLongitude(), FLICKR_API_EXTRAS).enqueue(new Callback<PhotosObject>() {
+        mSearchString = "dog";
+
+        mFlickrService.searchPhotos(FLICKR_API_SEARCH_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, mSearchString, location.getLatitude(), location.getLongitude(), FLICKR_API_EXTRAS).enqueue(new Callback<PhotosObject>() {
             @Override
             public void onResponse(Response<PhotosObject> response) {
                 if (response.isSuccess()) {
@@ -160,13 +168,13 @@ public class LocatrFragment extends SupportMapFragment {
                     Log.e(TAG, "Error: " + response.message());
                     showImageError();
                 }
-                dismissDialog(progressDialog);
+                dismissDialog(mProgressDialog);
             }
 
             @Override
             public void onFailure(Throwable t) {
                 Log.e(TAG, "Error: " + t.toString());
-                dismissDialog(progressDialog);
+                dismissDialog(mProgressDialog);
                 showImageError();
             }
         });
@@ -236,6 +244,14 @@ public class LocatrFragment extends SupportMapFragment {
     private void dismissDialog(Dialog dialog) {
         if (dialog != null) {
             dialog.dismiss();
+        }
+    }
+
+    private void cancelPhotosObjectRequests() {
+        dismissDialog(mProgressDialog);
+
+        if (mFlickrService != null) {
+            mFlickrService.searchPhotos(FLICKR_API_SEARCH_PHOTOS, FLICKR_API_KEY, FLICKR_API_FORMAT, FLICKR_API_JSON_CALLBACK, mSearchString, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), FLICKR_API_EXTRAS).cancel();
         }
     }
 
