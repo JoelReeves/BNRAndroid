@@ -202,23 +202,25 @@ public class LocatrFragment extends SupportMapFragment {
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             Log.d(TAG, "bitmap successfully loaded");
 
-            LatLng itemPoint = new LatLng(mPhotoList.get(0).getLatitude(), mPhotoList.get(0).getLongitude());
-            LatLng myPoint = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+            LatLng photoPosition = new LatLng(mPhotoList.get(0).getLatitude(), mPhotoList.get(0).getLongitude());
+            LatLng devicePosition = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
 
             BitmapDescriptor itemBitmap = BitmapDescriptorFactory.fromBitmap(bitmap);
-            MarkerOptions itemMarker = new MarkerOptions()
-                    .position(itemPoint)
+
+            MarkerOptions photoMarker = new MarkerOptions()
+                    .position(photoPosition)
                     .icon(itemBitmap);
-            MarkerOptions myMarker = new MarkerOptions()
-                    .position(myPoint);
+
+            MarkerOptions deviceMarker = new MarkerOptions()
+                    .position(devicePosition);
 
             mGoogleMap.clear();
-            mGoogleMap.addMarker(itemMarker);
-            mGoogleMap.addMarker(myMarker);
+            mGoogleMap.addMarker(photoMarker);
+            mGoogleMap.addMarker(deviceMarker);
 
             LatLngBounds bounds = new LatLngBounds.Builder()
-                    .include(itemPoint)
-                    .include(myPoint)
+                    .include(photoPosition)
+                    .include(devicePosition)
                     .build();
 
             int margin = getResources().getDimensionPixelSize(R.dimen.map_inset_margin);
