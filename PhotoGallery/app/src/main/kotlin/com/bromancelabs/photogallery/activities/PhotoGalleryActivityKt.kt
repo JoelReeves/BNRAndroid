@@ -1,5 +1,8 @@
 package com.bromancelabs.photogallery.activities
 
-/**
- * Created by Ivan on 2/22/2016.
- */
+import com.bromancelabs.photogallery.fragments.PhotoGalleryFragment
+
+class PhotoGalleryActivityKt : SingleFragmentActivityKt() {
+
+    override fun createFragment() = PhotoGalleryFragment.newInstance()
+}
