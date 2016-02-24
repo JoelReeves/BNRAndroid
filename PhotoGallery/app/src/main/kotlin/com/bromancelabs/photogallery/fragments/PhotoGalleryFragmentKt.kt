@@ -23,6 +23,7 @@ import android.widget.Toast
 import com.bromancelabs.photogallery.R
 import com.bromancelabs.photogallery.activities.PhotoGalleryActivity
 import com.bromancelabs.photogallery.models.PhotoKt
+import com.bromancelabs.photogallery.models.PhotosObjectKt
 import com.bromancelabs.photogallery.services.*
 import com.bromancelabs.photogallery.utils.NetworkUtils
 import com.bromancelabs.photogallery.utils.SnackBarUtils
@@ -155,14 +156,16 @@ class PhotoGalleryFragmentKt : VisibleFragmentKt() {
         photoAdapter?.clearAdapter()
 
         val searchString = QueryPreferences.getSearchQuery(activity)
+        val callback: Callback<PhotosObjectKt> = populatePhotoListAdapter { it.photos.photo }
+
         if (TextUtils.isEmpty(searchString)) {
-            flickrService.getRecentPhotos().enqueue(adapterCallback { it.photos.photo })
+            flickrService.getRecentPhotos().enqueue(callback)
         } else {
-            flickrService.searchPhotos(searchString).enqueue(adapterCallback { it.photos.photo })
+            flickrService.searchPhotos(searchString).enqueue(callback)
         }
     }
 
-    private inline fun <T> adapterCallback(crossinline extract: (T) -> List<PhotoKt>) = retrofitCallback<T> { call, response ->
+    private inline fun <T> populatePhotoListAdapter(crossinline extract: (T) -> List<PhotoKt>) = retrofitCallback<T> { call, response ->
         if (response.isSuccess) {
             setupAdapter(extract(response.body()))
         } else {
@@ -170,7 +173,7 @@ class PhotoGalleryFragmentKt : VisibleFragmentKt() {
         }
     }
 
-    private fun <T> retrofitCallback(code: (Call<T>, Response<T>) -> Unit): Callback<T> = object : Callback<T> {
+    private inline fun <T> retrofitCallback(crossinline code: (Call<T>, Response<T>) -> Unit): Callback<T> = object : Callback<T> {
 
         override fun onResponse(call: Call<T>?, response: Response<T>?) {
             if (null == call) Log.e(TAG, "Error receiving call result")
