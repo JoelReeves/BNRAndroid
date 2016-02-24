@@ -9,10 +9,10 @@ import android.support.v4.app.Fragment
 import android.util.Log
 import com.bromancelabs.photogallery.services.PollService
 
-abstract class VisibleFragmentKtKt : Fragment() {
+abstract class VisibleFragmentKt : Fragment() {
 
     companion object {
-        val TAG = VisibleFragmentKtKt::class.java.simpleName
+        val TAG = VisibleFragmentKt::class.java.simpleName
     }
 
     override fun onStart() {

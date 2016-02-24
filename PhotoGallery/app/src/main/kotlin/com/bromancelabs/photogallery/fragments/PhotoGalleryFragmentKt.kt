@@ -35,24 +35,28 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class PhotoGalleryFragmentKtKt : VisibleFragmentKtKt() {
+class PhotoGalleryFragmentKt : VisibleFragmentKt() {
 
     companion object {
-        val TAG = PhotoGalleryFragmentKtKt::class.java.simpleName
+        val TAG = PhotoGalleryFragmentKt::class.java.simpleName
         private val GRID_COLUMNS = 3
         private val IMAGEVIEW_WIDTH = 150
         private val IMAGEVIEW_HEIGHT = 150
         val POLL_INTENT = "poll_intent"
         val POLL_KEY_ID = "id"
 
-        fun newInstance() = PhotoGalleryFragmentKtKt()
+        fun newInstance() = PhotoGalleryFragmentKt()
     }
 
     val recyclerView by lazy { rv_photo_gallery }
     val flickrService by lazy { FlickrServiceKt.getInstance() }
     var photoAdapter: PhotoAdapterKt? = null
     var progressDialog: Dialog? = null
-    var lastResultId: String? = null
+    var lastResultId: String?
+        get() = QueryPreferencesKt.getLastResultId(activity)
+        set(value) {
+            value?.let{ QueryPreferencesKt.setLastResultId(activity, value) }
+        }
 
     private val mMessageReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -213,7 +217,7 @@ class PhotoGalleryFragmentKtKt : VisibleFragmentKtKt() {
             activity.sendBroadcast(Intent(PollService.ACTION_SHOW_NOTIFICATION), PollService.PRIVATE_PERMISSION)
         }
 
-        QueryPreferences.setLastResultId(activity, resultId)
+        lastResultId = resultId
     }
 
     private fun createNotification(): Notification {
@@ -258,8 +262,9 @@ class PhotoGalleryFragmentKtKt : VisibleFragmentKtKt() {
         }
 
         fun clearAdapter() {
+            val size = itemCount
             photoList = emptyList()
-            notifyItemRangeRemoved(0, getItemCount())
+            notifyItemRangeRemoved(0, size)
         }
     }
 
