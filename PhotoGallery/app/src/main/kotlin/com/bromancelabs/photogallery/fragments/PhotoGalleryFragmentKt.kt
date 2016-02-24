@@ -169,15 +169,16 @@ class PhotoGalleryFragmentKt : VisibleFragmentKt() {
         if (response.isSuccess) {
             setupAdapter(extract(response.body()))
         } else {
-            Toast.makeText(activity, "Fail", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "Failed to download photos", Toast.LENGTH_SHORT).show()
+            Log.d(TAG, "Failed to download photos (response: ${response.code()}")
         }
     }
 
     private inline fun <T> retrofitCallback(crossinline code: (Call<T>, Response<T>) -> Unit): Callback<T> = object : Callback<T> {
 
         override fun onResponse(call: Call<T>?, response: Response<T>?) {
-            if (null == call) Log.e(TAG, "Error receiving call result")
-            if (null == response) Log.e(TAG, "Error receiving response")
+            if (null == call) Log.e(TAG, "Network error receiving call result")
+            if (null == response) Log.e(TAG, "Network error receiving response")
 
             if (null != call && null != response) {
                 code(call, response)
@@ -187,7 +188,7 @@ class PhotoGalleryFragmentKt : VisibleFragmentKt() {
         }
 
         override fun onFailure(call: Call<T>?, t: Throwable?) {
-            Log.e(TAG, "Error: ${t?.message}")
+            Log.e(TAG, "Network Failure (Error): ${t?.message}", t)
             progressDialog.dismiss()
             showErrorSnackBar()
         }
