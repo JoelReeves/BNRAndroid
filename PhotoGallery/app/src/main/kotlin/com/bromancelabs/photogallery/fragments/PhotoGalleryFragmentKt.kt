@@ -193,7 +193,7 @@ class PhotoGalleryFragmentKt : VisibleFragmentKt() {
     private fun cancelPhotosObjectRequests() {
         progressDialog.dismiss()
         flickrService.getRecentPhotos().cancel()
-        flickrService.searchPhotos(QueryPreferences.getSearchQuery(activity)).cancel()
+        QueryPreferencesKt.getSearchQuery(activity)?.let { flickrService.searchPhotos(it).cancel() }
     }
 
     private fun setupAdapter(photoList: List<PhotoKt>) {
@@ -270,9 +270,9 @@ class PhotoGalleryFragmentKt : VisibleFragmentKt() {
 
     inner class PhotoHolderKt(view: View) : RecyclerView.ViewHolder(view) {
 
-        fun bindPhoto(photo: PhotoKt) {
+        fun bindPhoto(photo: PhotoKt?) {
             Picasso.with(activity)
-                .load(Uri.parse(photo.url))
+                .load(photo?.url?.let { Uri.parse(it) })
                 .placeholder(R.drawable.ic_placeholder_image)
                 .error(R.drawable.ic_error_image)
                 .resize(IMAGEVIEW_WIDTH, IMAGEVIEW_HEIGHT)
