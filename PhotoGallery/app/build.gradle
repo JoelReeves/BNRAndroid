@@ -26,7 +26,7 @@ android {
 
 
 ext.androidSupportVersion = '23.1.1'
-ext.retrofitVersion = '2.0.0-beta3'
+ext.retrofitVersion = '2.0.0-beta4'
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -39,15 +39,14 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
+
 buildscript {
     ext.kotlin_version = '1.0.0'
+
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
-}
-repositories {
-    mavenCentral()
 }

@@ -17,22 +17,23 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.PhotoGalleryActivity">
+
+        <activity android:name=".activities.PhotoGalleryActivityKt">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <service android:name=".services.PollService"/>
+        <service android:name=".services.PollServiceKt"/>
 
-        <receiver android:name=".services.StartupReceiver">
+        <receiver android:name=".services.StartupReceiverKt">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".services.NotificationReceiver"
+        <receiver android:name=".services.NotificationReceiverKt"
             android:exported="false">
             <intent-filter
                 android:priority="-999">

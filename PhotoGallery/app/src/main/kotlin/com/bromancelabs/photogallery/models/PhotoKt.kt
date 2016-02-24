@@ -4,7 +4,8 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class PhotoKt constructor(
-        @SerializedName("id") @Expose
+        @SerializedName("id")
+        @Expose
         var id: String,
         @SerializedName("owner") @Expose
         var owner: String,

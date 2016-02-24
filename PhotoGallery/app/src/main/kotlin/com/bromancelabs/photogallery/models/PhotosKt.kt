@@ -19,5 +19,5 @@ data class PhotosKt constructor(
         var total: String,
         @SerializedName("photo")
         @Expose
-        var photo: List<PhotoKt> = ArrayList<PhotoKt>()
+        var photo: List<PhotoKt> = emptyList()
 )

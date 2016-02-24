@@ -1,8 +1,8 @@
 package com.bromancelabs.photogallery.activities
 
-import com.bromancelabs.photogallery.fragments.PhotoGalleryFragment
+import com.bromancelabs.photogallery.fragments.PhotoGalleryFragmentKtKt
 
 class PhotoGalleryActivityKt : SingleFragmentActivityKt() {
 
-    override fun createFragment() = PhotoGalleryFragment.newInstance()
+    override fun createFragment() = PhotoGalleryFragmentKtKt.newInstance()
 }
