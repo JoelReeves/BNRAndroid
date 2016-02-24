@@ -29,7 +29,7 @@ class PollServiceKt(name: String = PollServiceKt.TAG) : IntentService(name) {
             return
         }
 
-        sendMessage(QueryPreferences.getLastResultId(this))
+        QueryPreferences.getLastResultId(this)?.let { sendMessage(it) }
     }
 
     private fun sendMessage(lastResultId: String) {

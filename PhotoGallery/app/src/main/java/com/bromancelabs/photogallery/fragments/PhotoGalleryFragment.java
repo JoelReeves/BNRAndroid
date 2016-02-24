@@ -354,7 +354,7 @@ public class PhotoGalleryFragment extends VisibleFragment {
 
         public void bindPhoto(Photo photo) {
             Picasso.with(getActivity())
-                    .load(Uri.parse(photo.getUrl()))
+                    .load(null != photo.getUrl() ? Uri.parse(photo.getUrl()) : null)
                     .placeholder(R.drawable.ic_placeholder_image)
                     .error(R.drawable.ic_error_image)
                     .resize(IMAGEVIEW_WIDTH, IMAGEVIEW_HEIGHT)

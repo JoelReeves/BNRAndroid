@@ -24,7 +24,7 @@ data class PhotoKt constructor(
         @SerializedName("isfamily") @Expose
         var isfamily: Int,
         @SerializedName("url_s") @Expose
-        var url: String
+        var url: String?
 ) {
 
     override fun toString() = "{Title: $title}"

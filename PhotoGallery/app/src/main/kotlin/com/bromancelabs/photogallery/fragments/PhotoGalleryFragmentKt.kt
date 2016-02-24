@@ -32,6 +32,7 @@ import com.bromancelabs.photogallery.utils.showProgressDialog
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_photo_gallery.*
 import kotlinx.android.synthetic.main.photo_item.view.*
+import kotlinx.android.synthetic.main.fragment_photo_gallery.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -155,10 +156,10 @@ class PhotoGalleryFragmentKt : VisibleFragmentKt() {
         progressDialog = showProgressDialog(activity)
         photoAdapter?.clearAdapter()
 
-        val searchString = QueryPreferences.getSearchQuery(activity)
+        val searchString: String? = QueryPreferences.getSearchQuery(activity)
         val callback: Callback<PhotosObjectKt> = populatePhotoListAdapter { it.photos.photo }
 
-        if (TextUtils.isEmpty(searchString)) {
+        if (null == searchString || TextUtils.isEmpty(searchString)) {
             flickrService.getRecentPhotos().enqueue(callback)
         } else {
             flickrService.searchPhotos(searchString).enqueue(callback)
@@ -274,9 +275,9 @@ class PhotoGalleryFragmentKt : VisibleFragmentKt() {
 
     inner class PhotoHolderKt(view: View) : RecyclerView.ViewHolder(view) {
 
-        fun bindPhoto(photo: PhotoKt?) {
+        fun bindPhoto(photo: PhotoKt) {
             Picasso.with(activity)
-                .load(photo?.url?.let { Uri.parse(it) })
+                .load(photo.url?.let { Uri.parse(it) })
                 .placeholder(R.drawable.ic_placeholder_image)
                 .error(R.drawable.ic_error_image)
                 .resize(IMAGEVIEW_WIDTH, IMAGEVIEW_HEIGHT)
