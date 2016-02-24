@@ -8,7 +8,7 @@ import retrofit2.http.Query
 interface FlickrServiceKt {
 
     companion object {
-         protected val URL = "https://api.flickr.com/services/rest/"
+         private val URL = "https://api.flickr.com/services/rest/"
          val FLICKR_API_KEY = "b71c3d2d57d035bf593c78dcb4b659d1"
          val FLICKR_API_GET_RECENT_PHOTOS = "flickr.photos.getRecent"
          val FLICKR_API_SEARCH_PHOTOS = "flickr.photos.search"
@@ -38,11 +38,11 @@ interface FlickrServiceKt {
 }
 
 fun FlickrServiceKt.getRecentPhotos() : Call<PhotosObjectKt> = getRecentPhotos(
-            method = FlickrServiceKt.FLICKR_API_GET_RECENT_PHOTOS,
-            apiKey = FlickrServiceKt.FLICKR_API_KEY,
-            format = FlickrServiceKt.FLICKR_API_FORMAT,
-            nojson = FlickrServiceKt.FLICKR_API_JSON_CALLBACK,
-            extras = FlickrServiceKt.FLICKR_API_EXTRAS)
+        method = FlickrServiceKt.FLICKR_API_GET_RECENT_PHOTOS,
+        apiKey = FlickrServiceKt.FLICKR_API_KEY,
+        format = FlickrServiceKt.FLICKR_API_FORMAT,
+        nojson = FlickrServiceKt.FLICKR_API_JSON_CALLBACK,
+        extras = FlickrServiceKt.FLICKR_API_EXTRAS)
 
 fun FlickrServiceKt.searchPhotos(searchString: String) : Call<PhotosObjectKt> = searchPhotos(
         method = FlickrServiceKt.FLICKR_API_SEARCH_PHOTOS,

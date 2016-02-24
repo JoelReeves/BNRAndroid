@@ -26,13 +26,11 @@ import com.bromancelabs.photogallery.models.PhotoKt
 import com.bromancelabs.photogallery.models.PhotosObjectKt
 import com.bromancelabs.photogallery.services.*
 import com.bromancelabs.photogallery.utils.NetworkUtils
-import com.bromancelabs.photogallery.utils.SnackBarUtils
 import com.bromancelabs.photogallery.utils.showPlainSnackBar
 import com.bromancelabs.photogallery.utils.showProgressDialog
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_photo_gallery.*
 import kotlinx.android.synthetic.main.photo_item.view.*
-import kotlinx.android.synthetic.main.fragment_photo_gallery.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,8 +42,8 @@ class PhotoGalleryFragmentKt : VisibleFragmentKt() {
         private val GRID_COLUMNS = 3
         private val IMAGEVIEW_WIDTH = 150
         private val IMAGEVIEW_HEIGHT = 150
-        val POLL_INTENT = "poll_intent"
-        val POLL_KEY_ID = "id"
+        private val POLL_INTENT = "poll_intent"
+        private val POLL_KEY_ID = "id"
 
         fun newInstance() = PhotoGalleryFragmentKt()
     }
@@ -54,6 +52,11 @@ class PhotoGalleryFragmentKt : VisibleFragmentKt() {
     val flickrService by lazy { FlickrServiceKt.getInstance() }
     var photoAdapter: PhotoAdapterKt? = null
     var progressDialog: Dialog? = null
+    var lastSearchQuery: String?
+        get() = QueryPreferences.getSearchQuery(activity)
+        set(value) {
+            value?.let { QueryPreferences.setSearchQuery(activity, value) }
+        }
     var lastResultId: String?
         get() = QueryPreferencesKt.getLastResultId(activity)
         set(value) {
@@ -90,7 +93,7 @@ class PhotoGalleryFragmentKt : VisibleFragmentKt() {
         LocalBroadcastManager.getInstance(activity).registerReceiver(mMessageReceiver, IntentFilter(POLL_INTENT))
 
         if (!NetworkUtils.isNetworkAvailable(activity)) {
-            SnackBarUtils.showPlainSnackBar(activity, R.string.snackbar_network_unavailable)
+            showPlainSnackBar(activity, R.string.snackbar_network_unavailable)
         } else {
             val isOn = QueryPreferences.isAlarmOn(activity)
             PollService.setServiceAlarm(activity, isOn)
@@ -112,7 +115,7 @@ class PhotoGalleryFragmentKt : VisibleFragmentKt() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(s: String): Boolean {
                 if (!TextUtils.isEmpty(s)) {
-                    QueryPreferences.setSearchQuery(activity, s)
+                    lastSearchQuery = s
                     hideKeyboard()
                     searchItem.collapseActionView()
                     getFlickrPhotos()
@@ -123,7 +126,7 @@ class PhotoGalleryFragmentKt : VisibleFragmentKt() {
             override fun onQueryTextChange(s: String) = false
         })
 
-        searchView.setOnSearchClickListener { searchView.setQuery(QueryPreferences.getSearchQuery(activity), false) }
+        searchView.setOnSearchClickListener { searchView.setQuery(lastSearchQuery, false) }
 
         val toggleItem = menu.findItem(R.id.menu_item_toggle_polling)
         toggleItem.setTitle(if (PollService.isServiceAlarmOn(activity)) R.string.stop_polling else R.string.start_polling)
@@ -132,7 +135,7 @@ class PhotoGalleryFragmentKt : VisibleFragmentKt() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_item_clear -> {
-                QueryPreferences.setSearchQuery(activity, null)
+                lastSearchQuery = null
                 getFlickrPhotos()
                 return true
             }
@@ -153,8 +156,8 @@ class PhotoGalleryFragmentKt : VisibleFragmentKt() {
     private fun getFlickrPhotos() {
         cancelPhotosObjectRequests()
 
-        progressDialog = showProgressDialog(activity)
         photoAdapter?.clearAdapter()
+        progressDialog = showProgressDialog(activity)
 
         val searchString: String? = QueryPreferences.getSearchQuery(activity)
         val callback: Callback<PhotosObjectKt> = populatePhotoListAdapter { it.photos.photo }
