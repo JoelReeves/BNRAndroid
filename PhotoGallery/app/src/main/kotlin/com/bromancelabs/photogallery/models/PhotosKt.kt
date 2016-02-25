@@ -5,19 +5,14 @@ import com.google.gson.annotations.SerializedName
 import java.util.*
 
 data class PhotosKt constructor(
-        @SerializedName("page")
-        @Expose
+        @SerializedName("page") @Expose
         var page: Int,
-        @SerializedName("pages")
-        @Expose
+        @SerializedName("pages") @Expose
         var pages: Int,
-        @SerializedName("perpage")
-        @Expose
+        @SerializedName("perpage") @Expose
         var perpage: Int,
-        @SerializedName("total")
-        @Expose
+        @SerializedName("total") @Expose
         var total: String,
-        @SerializedName("photo")
-        @Expose
+        @SerializedName("photo") @Expose
         var photo: List<PhotoKt> = emptyList()
 )

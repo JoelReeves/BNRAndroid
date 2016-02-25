@@ -16,11 +16,11 @@ object QueryPreferencesKt {
 
     fun getSearchQuery(context: Context): String? = getPreferences(context).getString(SEARCH_QUERY, null)
 
-    fun setSearchQuery(context: Context, query: String) = getEditor(context).putString(SEARCH_QUERY, query).apply()
+    fun setSearchQuery(context: Context, query: String?) = getEditor(context).putString(SEARCH_QUERY, query).apply()
 
     fun getLastResultId(context: Context): String? = getPreferences(context).getString(LAST_RESULT_ID, null)
 
-    fun setLastResultId(context: Context, id: String) = getEditor(context).putString(LAST_RESULT_ID, id).apply()
+    fun setLastResultId(context: Context, id: String?) = getEditor(context).putString(LAST_RESULT_ID, id).apply()
 
     fun isAlarmOn(context: Context) = getPreferences(context).getBoolean(IS_ALARM_ON, false)
 

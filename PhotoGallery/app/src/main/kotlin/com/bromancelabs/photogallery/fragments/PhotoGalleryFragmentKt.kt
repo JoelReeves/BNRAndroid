@@ -52,16 +52,14 @@ class PhotoGalleryFragmentKt : VisibleFragmentKt() {
     val flickrService by lazy { FlickrServiceKt.getInstance() }
     var photoAdapter: PhotoAdapterKt? = null
     var progressDialog: Dialog? = null
+
     var lastSearchQuery: String?
         get() = QueryPreferences.getSearchQuery(activity)
-        set(value) {
-            value?.let { QueryPreferences.setSearchQuery(activity, value) }
-        }
+        set(value) = QueryPreferences.setSearchQuery(activity, value)
+
     var lastResultId: String?
         get() = QueryPreferencesKt.getLastResultId(activity)
-        set(value) {
-            value?.let{ QueryPreferencesKt.setLastResultId(activity, value) }
-        }
+        set(value) = QueryPreferencesKt.setLastResultId(activity, value)
 
     private val mMessageReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
