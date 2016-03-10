@@ -2,6 +2,7 @@ package com.bromancelabs.photogallery.services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 
 public final class QueryPreferences {
 
@@ -20,6 +21,7 @@ public final class QueryPreferences {
         return getPreferences(context).edit();
     }
 
+    @Nullable
     public static String getSearchQuery(Context context) {
         return getPreferences(context).getString(SEARCH_QUERY, null);
     }
@@ -28,6 +30,7 @@ public final class QueryPreferences {
         getEditor(context).putString(SEARCH_QUERY, query).apply();
     }
 
+    @Nullable
     public static String getLastResultId(Context context) {
         return getPreferences(context).getString(LAST_RESULT_ID, null);
     }

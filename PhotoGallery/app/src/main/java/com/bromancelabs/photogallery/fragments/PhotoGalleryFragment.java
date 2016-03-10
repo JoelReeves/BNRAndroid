@@ -44,6 +44,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -216,7 +217,7 @@ public class PhotoGalleryFragment extends VisibleFragment {
 
     private Callback<PhotosObject> mPhotosObjectCallback = new Callback<PhotosObject>() {
         @Override
-        public void onResponse(Response<PhotosObject> response) {
+        public void onResponse(Call<PhotosObject> call, Response<PhotosObject> response) {
             if (response.isSuccess()) {
                 final long responseSize = Long.parseLong(response.body().getPhotos().getTotal());
                 Log.d(TAG, "JSON response # of photos: " + responseSize);
@@ -226,11 +227,12 @@ public class PhotoGalleryFragment extends VisibleFragment {
                 Log.e(TAG, "Error: " + response.message());
                 showErrorSnackBar();
             }
+
             dismissDialog(mProgressDialog);
         }
 
         @Override
-        public void onFailure(Throwable t) {
+        public void onFailure(Call<PhotosObject> call, Throwable t) {
             Log.e(TAG, "Error: " + t.toString());
             dismissDialog(mProgressDialog);
             showErrorSnackBar();
@@ -352,7 +354,7 @@ public class PhotoGalleryFragment extends VisibleFragment {
 
         public void bindPhoto(Photo photo) {
             Picasso.with(getActivity())
-                    .load(Uri.parse(photo.getUrl()))
+                    .load(null != photo.getUrl() ? Uri.parse(photo.getUrl()) : null)
                     .placeholder(R.drawable.ic_placeholder_image)
                     .error(R.drawable.ic_error_image)
                     .resize(IMAGEVIEW_WIDTH, IMAGEVIEW_HEIGHT)
